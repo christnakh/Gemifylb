@@ -1,0 +1,15 @@
+{
+    "name": "christnakh/website",
+    "autoload": {
+        "psr-4": {
+            "Christnakh\\Website\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "christnakh",
+            "email": "christnakh@gmail.com"
+        }
+    ],
+    "require": {}
+}
