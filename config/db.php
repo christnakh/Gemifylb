@@ -2,10 +2,17 @@
 
 session_start();
 
+// $host = 'localhost';
+// $user = 'root';
+// $pass = 'root';
+// $db = 'Gemify';
+
+
 $host = 'localhost';
-$user = 'root';
-$pass = 'root';
-$db = 'Gemify';
+$user = 'u853504453_gemifylb';
+$pass = '~Y5N:KFQWtbhahah';
+$db = 'u853504453_Gemify';
+
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
