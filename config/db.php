@@ -8,7 +8,7 @@ session_start();
 // $db = 'Gemify';
 
 
-$host = 'localhost';
+$host = 'srv1589.hstgr.io';
 $user = 'u853504453_gemifylb';
 $pass = '~Y5N:KFQWtbhahah';
 $db = 'u853504453_Gemify';
