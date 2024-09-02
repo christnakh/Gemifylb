@@ -120,6 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 }
 
                 $productDetails = [
+                    'ID' => $product['id'] ?? '',
                     'title' => $product['title'] ?? $product['nature'] ?? $product['gemstone_name'] ?? '',
                     'photo' => $photoPath,
                     'certificate' => $certificatePath,
@@ -137,8 +138,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                     'price' => $price,
                     'full_name' => $product['full_name'] ?? '',
                     'email' => $product['email'] ?? '',
-                    'phone_number' => $product['phone_number'] ?? ''
+                    'phone_number' => $product['phone_number'] ?? '',
+                    'boost' => $product['boost'] ?? '',
+                    'certificate_type' => $product['certificate'] ?? '',
+                    'is_approved' => $product['is_approved'] ?? '',
                 ];
+                
             } else {
                 $error_message = 'Product not found.';
             }
@@ -179,6 +184,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 <?php endif; ?>
             </div>
             <div class="text-center product-info">
+                <?php if (!empty($productDetails['ID'])): ?>
+                    <p><strong>ID:</strong> <?php echo htmlspecialchars($productDetails['ID']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($productDetails['certificate_type'])): ?>
+                    <p><strong>Certificate:</strong> <?php echo htmlspecialchars($productDetails['certificate_type']); ?></p>
+                <?php endif; ?>
                 <?php if (!empty($productDetails['weight'])): ?>
                     <p><strong>Weight:</strong> <?php echo htmlspecialchars($productDetails['weight']); ?> carats</p>
                 <?php endif; ?>
@@ -212,6 +223,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 <?php if (!empty($productDetails['price'])): ?>
                     <p><strong>Price:</strong> $<?php echo htmlspecialchars($productDetails['price']); ?></p>
                 <?php endif; ?>
+                <?php if (!empty($productDetails['boost'])): ?>
+                    <p><strong>Boost:</strong> <?php echo htmlspecialchars($productDetails['boost']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($productDetails['is_approved'])): ?>
+                    <p><strong>Approval Status:</strong> <?php echo htmlspecialchars($productDetails['is_approved']); ?></p>
+                <?php endif; ?>
                 <?php if (!empty($productDetails['full_name'])): ?>
                     <p><strong>Posted by:</strong> <?php echo htmlspecialchars($productDetails['full_name']); ?></p>
                 <?php endif; ?>
@@ -220,6 +237,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 <?php endif; ?>
                 <?php if (!empty($productDetails['phone_number'])): ?>
                     <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($productDetails['phone_number']); ?></p>
+                <?php endif; ?>
+                <br><br>
+                <?php if (!empty($productDetails['video'])): ?>
+                    <h2>Video</h2>
+                    <video controls width="400" height="250">
+                        <source src="../uploads/<?php echo htmlspecialchars($productDetails['video']); ?>" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 <?php endif; ?>
             </div>
         <?php elseif (isset($error_message)): ?>
