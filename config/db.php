@@ -2,16 +2,16 @@
 
 session_start();
 
-$host = 'localhost';
-$user = 'root';
-$pass = 'root';
-$db = 'Gemify';
-
-
 // $host = 'localhost';
-// $user = 'u853504453_gemifylb';
-// $pass = '~Y5N:KFQWtbhahah';
-// $db = 'u853504453_Gemify';
+// $user = 'root';
+// $pass = 'root';
+// $db = 'Gemify';
+
+
+$host = 'localhost';
+$user = 'u853504453_gemifylb';
+$pass = '~Y5N:KFQWt';
+$db = 'u853504453_Gemify';
 
 
 try {
