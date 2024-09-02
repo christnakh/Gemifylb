@@ -97,6 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Profile</title>
     <link rel="stylesheet" type="text/css" href="../css/global.css">
+      <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>

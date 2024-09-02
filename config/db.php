@@ -2,16 +2,16 @@
 
 session_start();
 
+$host = 'localhost';
+$user = 'root';
+$pass = 'root';
+$db = 'Gemify';
+
+
 // $host = 'localhost';
-// $user = 'root';
-// $pass = 'root';
-// $db = 'Gemify';
-
-
-$host = 'srv1589.hstgr.io';
-$user = 'u853504453_gemifylb';
-$pass = '~Y5N:KFQWtbhahah';
-$db = 'u853504453_Gemify';
+// $user = 'u853504453_gemifylb';
+// $pass = '~Y5N:KFQWtbhahah';
+// $db = 'u853504453_Gemify';
 
 
 try {
@@ -24,3 +24,18 @@ try {
 
 ?>
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+    
+</body>
+</html>

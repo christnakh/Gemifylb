@@ -233,6 +233,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id']) && isse
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+      <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <?php include '../includes/navbar.php'; ?>

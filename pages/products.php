@@ -122,6 +122,10 @@ try {
     <link rel="stylesheet" href="../css/products.css">
     <link rel="stylesheet" href="../css/global.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
     <script>
         $(document).ready(function() {
     $('.favorite-btn').click(function() {

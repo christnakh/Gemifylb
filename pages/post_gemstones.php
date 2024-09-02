@@ -97,6 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Include any necessary CSS or JavaScript files -->
     <link rel="stylesheet" href="../css/styles.css">
     <script src="../js/post_gemstones.js"></script>
+      <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <?php include '../includes/header.php'; ?>
