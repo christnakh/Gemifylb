@@ -43,14 +43,28 @@ $isLoggedIn = isset($_SESSION['user_id']);
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="post_diamonds.php">Diamonds</a></li>
+                                <li><a class="dropdown-item" href="post_black_diamonds.php">Black Diamonds</a></li>
                                 <li><a class="dropdown-item" href="post_gemstones.php">Gemstones</a></li>
                                 <li><a class="dropdown-item" href="post_jewerlys.php">Jewelry</a></li>
                                 <li><a class="dropdown-item" href="post_watches.php">Watches</a></li>
                                 <li><a class="dropdown-item" href="post_gadgets.php">Gadgets</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button">
+                                Rapaport
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="../uploads/rapaport/pear.pdf">Pear</a></li>
+                                <li><a class="dropdown-item" href="../uploads/rapaport/round.pdf">Round</a></li>
+                            </ul>
+                        </li>
+               
                         <li class="nav-item">
                             <a class="nav-link text-white" href="products.php">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="favorites.php">Likes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="profile.php">Profile</a>

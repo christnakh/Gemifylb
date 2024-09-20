@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include '../config/db.php'; // Ensure the correct path to your database configuration
 

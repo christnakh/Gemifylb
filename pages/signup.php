@@ -4,7 +4,7 @@ include '../config/db.php';
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
-    header("Location: index.php"); // Redirect to index page
+    header("Location: ../index.php"); // Redirect to index page
     exit();
 }
 

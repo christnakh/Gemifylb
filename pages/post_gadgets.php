@@ -1,6 +1,14 @@
 <?php
 include '../config/db.php'; // Ensure this file contains your PDO connection code
 
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
+}
+
+
 // Function to handle file upload
 function uploadFile($fileInputName, $targetDir, $allowedTypes) {
     if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] == 0) {
@@ -133,6 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
+    <?php include '../includes/footer.php'; ?>
     <!-- Include Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>

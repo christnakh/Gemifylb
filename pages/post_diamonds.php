@@ -1,9 +1,17 @@
 <?php
 include '../config/db.php'; // Assuming this file contains your PDO connection code
 
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
+}
+
+
 // Function to handle file upload
 function uploadFile($fileInputName, $targetDir, $allowedTypes) {
-    if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] == 0) {
+    if (isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] == UPLOAD_ERR_OK) {
         $fileInfo = pathinfo($_FILES[$fileInputName]['name']);
         $fileExtension = strtolower($fileInfo['extension']);
         if (in_array($fileExtension, $allowedTypes)) {
@@ -12,13 +20,15 @@ function uploadFile($fileInputName, $targetDir, $allowedTypes) {
             if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $filepath)) {
                 return $filename;
             } else {
-                return "Error uploading file.";
+                return "Error moving uploaded file.";
             }
         } else {
             return "Invalid file type.";
         }
+    } elseif (isset($_FILES[$fileInputName]['error'])) {
+        return "Upload error code: " . $_FILES[$fileInputName]['error'];
     }
-    return ''; // Return empty string if file was not uploaded
+    return "No file uploaded.";
 }
 
 // Handle form submission
@@ -56,37 +66,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $photo_diamond = uploadFile('photo_diamond', '../uploads/diamond/photo/', $allowedImageTypes);
     $video_diamond = uploadFile('video_diamond', '../uploads/diamond/video/', $allowedVideoTypes);
 
-    if ($photo_certificate == "Error uploading file." || $photo_diamond == "Error uploading file." || $video_diamond == "Error uploading file.") {
-        echo "File upload failed.";
-    } elseif ($photo_certificate == "Invalid file type." || $photo_diamond == "Invalid file type." || $video_diamond == "Invalid file type.") {
-        echo "Invalid file type.";
+    if (strpos($photo_certificate, 'Error') !== false || 
+        strpos($photo_diamond, 'Error') !== false || 
+        strpos($video_diamond, 'Error') !== false) {
+        echo "File upload failed: $photo_certificate, $photo_diamond, $video_diamond";
+    } elseif (strpos($photo_certificate, 'Invalid') !== false || 
+              strpos($photo_diamond, 'Invalid') !== false || 
+              strpos($video_diamond, 'Invalid') !== false) {
+        echo "Invalid file type: $photo_certificate, $photo_diamond, $video_diamond";
     } else {
-        // Insert data into the correct table based on the nature of the diamond
-        if ($nature == 'Black Diamond') {
-            // Insert into black_diamonds table
-            $stmt = $conn->prepare("INSERT INTO black_diamonds (photo_certificate, photo_diamond, video_diamond, shape, weight, user_id) VALUES (?, ?, ?, ?, ?, ?)");
-        } else {
-            // Insert into diamond table
-            $stmt = $conn->prepare("INSERT INTO diamond (nature, photo_certificate, photo_diamond, video_diamond, shape, certificate, weight, clarity, color, cut_type, fluorescence_type, discount_type, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bindParam(6, $certificate);
-            $stmt->bindParam(7, $weight);
-            $stmt->bindParam(8, $clarity);
-            $stmt->bindParam(9, $color);
-            $stmt->bindParam(10, $cut_type);
-            $stmt->bindParam(11, $fluorescence_type);
-            $stmt->bindParam(12, $discount_type);
-        }
-
-        $stmt->bindParam(1, $photo_certificate);
-        $stmt->bindParam(2, $photo_diamond);
-        $stmt->bindParam(3, $video_diamond);
-        $stmt->bindParam(4, $shape);
-        $stmt->bindParam(5, $weight);
+        // Insert data into diamond table
+        $stmt = $conn->prepare("INSERT INTO diamond (nature, photo_certificate, photo_diamond, video_diamond, shape, certificate, weight, clarity, color, cut_type, fluorescence_type, discount_type, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bindParam(1, $nature);
+        $stmt->bindParam(2, $photo_certificate);
+        $stmt->bindParam(3, $photo_diamond);
+        $stmt->bindParam(4, $video_diamond);
+        $stmt->bindParam(5, $shape);
+        $stmt->bindParam(6, $certificate);
+        $stmt->bindParam(7, $weight);
+        $stmt->bindParam(8, $clarity);
+        $stmt->bindParam(9, $color);
+        $stmt->bindParam(10, $cut_type);
+        $stmt->bindParam(11, $fluorescence_type);
+        $stmt->bindParam(12, $discount_type);
         $stmt->bindParam(13, $user_id);
 
         if ($stmt->execute()) {
             echo "<script>alert('Diamond posted successfully.');</script>";
-            header("location:post_diamonds.php");
+            header("location: post_diamonds.php");
         } else {
             echo "Error: " . $stmt->errorInfo()[2];
         }
@@ -94,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 
 
@@ -338,6 +346,7 @@ function toggleOtherShapeInput(value) {
         </div>
     </div>
 
+    <?php include '../includes/footer.php'; ?>
     <!-- Include Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>

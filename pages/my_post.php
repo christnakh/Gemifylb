@@ -1,5 +1,6 @@
+
+
 <?php
-session_start();
 include '../config/db.php';
 
 // Check if the user is logged in
@@ -13,29 +14,23 @@ ini_set('display_errors', 1);
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch posts from all tables
-$query = $conn->prepare(
-    "SELECT id, 'diamond' AS type, nature AS name, photo_certificate, photo_diamond, video_diamond, shape, weight, NULL AS clarity, NULL AS color, cut_type, fluorescence_type, discount_type, is_approved, is_active, boost 
-     FROM diamond WHERE user_id = :user_id
-    UNION ALL
-    SELECT id, 'gemstone' AS type, gemstone_name AS name, photo_certificate, photo_gemstone AS photo_diamond, video_gemstone AS video_diamond, shape, weight, NULL AS clarity, color, cut AS cut_type, NULL AS fluorescence_type, NULL AS discount_type, is_approved, is_active, boost 
-    FROM gemstone WHERE user_id = :user_id
-    UNION ALL
-    SELECT id, 'black_diamonds' AS type, name, photo_certificate, photo_diamond, video_diamond, shape, weight, NULL AS clarity, NULL AS color, NULL AS cut_type, NULL AS fluorescence_type, NULL AS discount_type, is_approved, is_active, boost 
-    FROM black_diamonds WHERE user_id = :user_id
-    UNION ALL
-    SELECT id, 'gadgets' AS type, title AS name, NULL AS photo_certificate, photo_gadget AS photo_diamond, video_gadget AS video_diamond, NULL AS shape, NULL AS weight, NULL AS clarity, NULL AS color, NULL AS cut_type, NULL AS fluorescence_type, NULL AS discount_type, is_approved, is_active, boost 
-    FROM gadgets WHERE user_id = :user_id
-    UNION ALL
-    SELECT id, 'jewelry' AS type, title AS name, photo_certificate, photo_jewelry AS photo_diamond, video AS video_diamond, NULL AS shape, NULL AS weight, NULL AS clarity, NULL AS color, NULL AS cut_type, NULL AS fluorescence_type, NULL AS discount_type, is_approved, is_active, boost 
-    FROM jewelry WHERE user_id = :user_id
-    UNION ALL
-    SELECT id, 'watches' AS type, title AS name, photo_certificate, photo_watch AS photo_diamond, video AS video_diamond, NULL AS shape, NULL AS weight, NULL AS clarity, NULL AS color, NULL AS cut_type, NULL AS fluorescence_type, NULL AS discount_type, is_approved, is_active, boost 
-    FROM watches WHERE user_id = :user_id"
-);
+// SQL queries to fetch all product types for the current user
+$product_queries = [
+    'black_diamonds' => "SELECT * FROM black_diamonds WHERE user_id = :user_id",
+    'diamond' => "SELECT * FROM diamond WHERE user_id = :user_id",
+    'gadgets' => "SELECT * FROM gadgets WHERE user_id = :user_id",
+    'gemstone' => "SELECT * FROM gemstone WHERE user_id = :user_id",
+    'jewelry' => "SELECT * FROM jewelry WHERE user_id = :user_id",
+    'watches' => "SELECT * FROM watches WHERE user_id = :user_id"
+];
 
-$query->execute(['user_id' => $user_id]);
-$posts = $query->fetchAll(PDO::FETCH_ASSOC);
+// Fetch products for each type
+$products = [];
+foreach ($product_queries as $category => $query) {
+    $stmt = $conn->prepare($query);
+    $stmt->execute(['user_id' => $user_id]);
+    $products[$category] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,153 +38,199 @@ $posts = $query->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Posts</title>
+    <title>My Posts</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet">
-      <!-- other meta tags and elements -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <!-- <link rel="stylesheet" href="../css/global.css"> -->
     <link rel="stylesheet" href="../css/my_post.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .product-container {
+            margin-bottom: 20px;
+        }
+        .product-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.3s ease;
+        }
+        .product-box:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .product-media {
+            margin-bottom: 15px;
+        }
+        .image-slider {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+        }
+        .slider-container {
+            display: flex;
+            overflow: hidden;
+        }
+        .slider-container img, .slider-container video {
+            max-width: 100%;
+            display: block;
+            border-radius: 5px;
+        }
+        .slider-nav {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .prev, .next {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 5px;
+        }
+        .prev:hover, .next:hover {
+            background-color: #0056b3;
+        }
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+        .dot.active {
+            background-color: #717171;
+        }
+        .product-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .action-form {
+            display: flex;
+            justify-content: center;
+        }
+        @media (max-width: 1200px) {
+            .product-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 900px) {
+            .product-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .product-actions {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+        .product-details p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
 <?php include '../includes/header.php'; ?>
+<div class="container">
+    <h1 class="text-center mb-4">My Products</h1>
 
-<div class="container my-5">
-    <h1 class="text-center mb-4">Your Posts</h1>
-    <div class="row">
-        <?php foreach ($posts as $index => $post): ?>
-            <div class="col-md-6 mb-4">
-                <div class="post p-3 border rounded shadow-sm">
-                    <h2 class="text-center mb-3"><?php echo htmlspecialchars($post['name']); ?></h2>
-                    <hr>
-                    <div class="post-media">
-                        <div class="image-slider">
-                            <div class="slider-container">
-                                <?php if (!empty($post['photo_certificate'])) : ?>
-                                    <img src="<?php echo htmlspecialchars("../uploads/" . $post['type'] . "/certificates/" . $post['photo_certificate']); ?>" alt="Certificate Image">
-                                <?php endif; ?>
-                                <?php if (!empty($post['photo_diamond'])) : ?>
-                                    <img src="<?php echo htmlspecialchars("../uploads/" . $post['type'] . "/photo/" . $post['photo_diamond']); ?>" alt="Item Image">
-                                <?php endif; ?>
-                                <?php if (!empty($post['video_diamond'])) : ?>
-                                    <video controls>
-                                        <source src="<?php echo htmlspecialchars("../uploads/" . $post['type'] . "/video/" . $post['video_diamond']); ?>" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                <?php endif; ?>
-                            </div>
-                            <div class="slider-nav">
-                                <button class="prev">&lt;</button>
-                                <div class="slider-dots"></div>
-                                <button class="next">&gt;</button>
+    <?php foreach ($products as $category => $items): ?>
+        <div class="product-container">
+            <h2><?= str_replace('_', ' ', $category) ?> Products</h2>
+            <div class="row">
+                <?php if (!empty($items)): ?>
+                    <?php foreach ($items as $item): ?>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="product-box">
+                                <div class="product-media">
+                                    <div class="image-slider">
+                                        <div class="slider-container">
+                                            <?php if (!empty($item['photo_certificate'])): ?>
+                                                <img src="../uploads/<?= $category ?>/certificates/<?= htmlspecialchars($item['photo_certificate']) ?>" alt="Certificate Image">
+                                            <?php endif; ?>
+                                            <?php if (!empty($item['photo_diamond']) || !empty($item['photo_gadget']) || !empty($item['photo_gemstone']) || !empty($item['photo_jewelry']) || !empty($item['photo_watch'])): ?>
+                                                <img src="../uploads/<?= $category ?>/photo/<?= htmlspecialchars($item['photo_diamond'] ?? $item['photo_gadget'] ?? $item['photo_gemstone'] ?? $item['photo_jewelry'] ?? $item['photo_watch']) ?>" alt="Product Image">
+                                            <?php endif; ?>
+                                            <?php if (!empty($item['video_diamond']) || !empty($item['video_gadget']) || !empty($item['video_gemstone']) || !empty($item['video']) || !empty($item['video_watch'])): ?>
+                                                <video controls>
+                                                    <source src="../uploads/<?= $category ?>/video/<?= htmlspecialchars($item['video_diamond'] ?? $item['video_gadget'] ?? $item['video_gemstone'] ?? $item['video'] ?? $item['video_watch']) ?>" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-details">
+                                    <!-- Display product-specific details -->
+                                    <?php if ($category === 'black_diamonds'): ?>
+                                        <p><strong>Name:</strong> <?= htmlspecialchars($item['name']) ?></p>
+                                        <p><strong>Shape:</strong> <?= htmlspecialchars($item['shape']) ?></p>
+                                        <p><strong>Weight:</strong> <?= htmlspecialchars($item['weight']) ?> carats</p>
+                                    <?php elseif ($category === 'diamond'): ?>
+                                        <p><strong>Nature:</strong> <?= htmlspecialchars($item['nature']) ?></p>
+                                        <p><strong>Shape:</strong> <?= htmlspecialchars($item['shape']) ?></p>
+                                        <p><strong>Weight:</strong> <?= htmlspecialchars($item['weight']) ?> carats</p>
+                                        <p><strong>Cut Type:</strong> <?= htmlspecialchars($item['cut_type']) ?></p>
+                                    <?php elseif ($category === 'gadgets'): ?>
+                                        <p><strong>Title:</strong> <?= htmlspecialchars($item['title']) ?></p>
+                                        <p><strong>Description:</strong> <?= htmlspecialchars($item['description']) ?></p>
+                                        <p><strong>Price:</strong> $<?= htmlspecialchars($item['price']) ?></p>
+                                    <?php elseif ($category === 'gemstone'): ?>
+                                        <p><strong>Name:</strong> <?= htmlspecialchars($item['gemstone_name']) ?></p>
+                                        <p><strong>Shape:</strong> <?= htmlspecialchars($item['shape']) ?></p>
+                                        <p><strong>Weight:</strong> <?= htmlspecialchars($item['weight']) ?> carats</p>
+                                    <?php elseif ($category === 'jewelry'): ?>
+                                        <p><strong>Title:</strong> <?= htmlspecialchars($item['title']) ?></p>
+                                        <p><strong>Description:</strong> <?= htmlspecialchars($item['description']) ?></p>
+                                        <p><strong>Price:</strong> $<?= htmlspecialchars($item['price']) ?></p>
+                                    <?php elseif ($category === 'watches'): ?>
+                                        <p><strong>Brand:</strong> <?= htmlspecialchars($item['brand']) ?></p>
+                                        <p><strong>Description:</strong> <?= htmlspecialchars($item['description']) ?></p>
+                                        <p><strong>Price:</strong> $<?= htmlspecialchars($item['price']) ?></p>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <div class="product-actions">
+                                    <form action="edit_<?= $category ?>.php" method="POST" class="action-form">
+                                        <input type="hidden" name="product_id" value="<?= htmlspecialchars($item['id']) ?>">
+                                        <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                    </form>
+
+                                    <form action="delete_post.php" method="post" class="action-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <input type="hidden" name="id" value="<?= htmlspecialchars($item['id']) ?>">
+                                        <input type="hidden" name="type" value="<?= htmlspecialchars($category) ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+
+                                    <form action="toggle_status.php" method="post" class="action-form">
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($item['id']) ?>">
+                                    <input type="hidden" name="type" value="<?= htmlspecialchars($category) ?>">
+                                    <input type="hidden" name="is_active" value="<?= htmlspecialchars($item['is_active']) ?>">
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        <?= $item['is_active'] ? 'Deactivate' : 'Activate' ?>
+                                    </button>
+                                </form>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row text-center">
-                        <div class="col-12 col-md-6">
-                            <p><strong>Type:</strong> <?php echo htmlspecialchars(ucfirst($post['type'])); ?></p>
-                        </div>
-                    </div>
-
-                    <p class="text-center">
-                        <strong>Status:</strong> 
-                        <?php 
-                        if ($post['is_approved'] === 'Pending') {
-                            echo '<span class="badge bg-warning text-dark">Pending</span>';
-                        } elseif ($post['is_approved'] === 'Accept') {
-                            echo '<span class="badge bg-success">Posted</span>';
-                        } else {
-                            echo '<span class="badge bg-danger">Declined</span>';
-                        }
-                        ?>
-                        <br>
-                        <strong>Activation:</strong> 
-                        <?php echo $post['is_active'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?>
-                        <br>
-                        <strong>Boosted:</strong> 
-                        <?php echo $post['boost'] ? '<span class="badge bg-primary">Yes</span>' : '<span class="badge bg-secondary">No</span>'; ?>
-                    </p>
-
-                    <div class="post-actions mb-3 d-flex justify-content-center">
-                        <form action="edit_post.php" method="post" class="mx-1 mb-3">
-                            <input type="hidden" name="product_id" value="<?php echo $post['id']; ?>">
-                            <input type="hidden" name="product_type" value="<?php echo $post['type']; ?>">
-                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                        </form>
-
-                        <form action="delete_post.php" method="post" class="mx-1 mb-3" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                            <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
-                            <input type="hidden" name="type" value="<?php echo $post['type']; ?>">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-
-                        <form action="toggle_status.php" method="post" class="mx-1 mb-3">
-                            <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
-                            <input type="hidden" name="type" value="<?php echo $post['type']; ?>">
-                            <input type="hidden" name="is_active" value="<?php echo $post['is_active']; ?>">
-                            <button type="submit" class="btn btn-success btn-sm" style="color: white;">
-                                <?php echo $post['is_active'] ? 'Deactivate' : 'Activate'; ?>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No <?= str_replace('_', ' ', $category) ?> products found.</p>
+                <?php endif; ?>
             </div>
-            <?php if ($index % 2 != 0 && $index != count($posts) - 1): ?>
-                </div><div class="row">
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
+        </div>
+    <?php endforeach; ?>
 </div>
-
 <?php include '../includes/footer.php'; ?>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sliders = document.querySelectorAll('.image-slider');
-        sliders.forEach(slider => {
-            const slides = slider.querySelectorAll('.slider-container img, .slider-container video');
-            const prevButton = slider.querySelector('.prev');
-            const nextButton = slider.querySelector('.next');
-            const dotsContainer = slider.querySelector('.slider-dots');
-            let currentIndex = 0;
-
-            function showSlide(index) {
-                slides.forEach(slide => slide.style.display = 'none');
-                slides[index].style.display = 'block';
-                dotsContainer.querySelectorAll('span').forEach(dot => dot.classList.remove('active'));
-                dotsContainer.querySelectorAll('span')[index].classList.add('active');
-            }
-
-            slides.forEach((slide, i) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    currentIndex = i;
-                    showSlide(currentIndex);
-                });
-                dotsContainer.appendChild(dot);
-            });
-
-            showSlide(currentIndex);
-
-            prevButton.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-                showSlide(currentIndex);
-            });
-
-            nextButton.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                showSlide(currentIndex);
-            });
-        });
-    });
-</script>
 </body>
 </html>

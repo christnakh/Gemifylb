@@ -1,0 +1,111 @@
+<?php
+session_start();
+include '../config/db.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'];
+
+    // Fetch the jewelry details
+    $stmt = $conn->prepare("SELECT * FROM jewelry WHERE id = :id");
+    $stmt->execute(['id' => $product_id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$product) {
+        echo "Product not found!";
+        exit;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    $title = $_POST['title'];
+    $type = $_POST['type'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+
+    // Handle image upload
+    $photo_jewelry = $product['photo_jewelry'];
+    if ($_FILES['photo_jewelry']['name']) {
+        $photo_jewelry = 'uploads/jewelry/photo_jewelry/' . basename($_FILES['photo_jewelry']['name']);
+        move_uploaded_file($_FILES['photo_jewelry']['tmp_name'], $photo_jewelry);
+    }
+
+    $photo_certificate = $product['photo_certificate'];
+    if ($_FILES['photo_certificate']['name']) {
+        $photo_certificate = 'uploads/jewelry/photo_certificate/' . basename($_FILES['photo_certificate']['name']);
+        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate);
+    }
+
+    // Update query
+    $stmt = $pdo->prepare("UPDATE jewelry SET title = :title, type = :type, description = :description, price = :price, photo_jewelry = :photo_jewelry, photo_certificate = :photo_certificate WHERE id = :id");
+    $stmt->execute([
+        'title' => $title,
+        'type' => $type,
+        'description' => $description,
+        'price' => $price,
+        'photo_jewelry' => $photo_jewelry,
+        'photo_certificate' => $photo_certificate,
+        'id' => $product_id
+    ]);
+
+    header("Location: mypost.php");
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Jewelry</title>
+</head>
+<body>
+
+<h1>Edit Jewelry</h1>
+
+<form action="edit_jewelry.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" value="<?= $product['title'] ?>">
+
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" value="<?= $product['type'] ?>">
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"><?= $product['description'] ?></textarea>
+
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price" value="<?= $product['price'] ?>">
+
+    <label for="photo_jewelry">Jewelry Photo:</label>
+    <input type="file" id="photo_jewelry" name="photo_jewelry">
+    <p>Current Jewelry Photo:</p>
+    <img src="<?= $product['photo_jewelry'] ?>" alt="Jewelry Photo" width="100">
+
+    <label for="photo_certificate">Certificate Photo:</label>
+    <input type="file" id="photo_certificate" name="photo_certificate">
+    <p>Current Certificate Photo:</p>
+    <img src="<?= $product['photo_certificate'] ?>" alt="Certificate Photo" width="100">
+
+    <button type="submit" name="submit">Update</button>
+</form>
+
+</body>
+</html>
+
+
+CREATE TABLE `jewelry` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `photo_jewelry` varchar(255) DEFAULT NULL,
+  `photo_certificate` varchar(255) NOT NULL,
+  `video` varchar(255) DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
+  `description` text,
+  `price` decimal(10,0) NOT NULL,
+  `boost` tinyint(1) NOT NULL DEFAULT '0',
+  `is_approved` enum('Pending','Accept','Decline') DEFAULT 'Pending',
+  `is_active` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

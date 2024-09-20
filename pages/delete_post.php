@@ -1,12 +1,13 @@
 <?php
-session_start();
 include '../config/db.php';
 
-// Check if the user is logged in
+
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    echo "You need to log in to perform this action.";
-    exit;
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
 }
+
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

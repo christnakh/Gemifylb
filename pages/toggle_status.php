@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../config/db.php';
 
 // Check if the user is logged in
@@ -11,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post_id = $_POST['id'];
     $post_type = $_POST['type'];
-    $is_active = $_POST['is_active'] === '1' ? 0 : 1; // Toggle the status
+    $is_active = $_POST['is_active'] == 1 ? 0 : 1; // Toggle the status
 
     // Map post types to their respective tables
     $tables = [
@@ -41,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 
     if ($result) {
-        echo "Status updated successfully!";
+        $_SESSION['message'] = "Status updated successfully!";
     } else {
-        echo "Failed to update status.";
+        $_SESSION['error'] = "Failed to update status.";
     }
 
     header("Location: my_post.php");

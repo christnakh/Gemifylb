@@ -51,6 +51,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="pages/post_diamonds.php">Diamonds</a></li>
+                                <li><a class="dropdown-item" href="pages/post_black_diamonds.php">Black Diamonds</a></li>
                                 <li><a class="dropdown-item" href="pages/post_gemstones.php">Gemstones</a></li>
                                 <li><a class="dropdown-item" href="pages/post_jewerlys.php">Jewelry</a></li>
                                 <li><a class="dropdown-item" href="pages/post_watches.php">Watches</a></li>
@@ -59,6 +60,9 @@ $isLoggedIn = isset($_SESSION['user_id']);
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="pages/products.php">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="pages/favorites.php">Likes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="pages/profile.php">Profile</a>
@@ -284,61 +288,16 @@ $isLoggedIn = isset($_SESSION['user_id']);
               <h5>7th of July 2024</h5>
             </div>
           </div>
-          <div class="item">
-            <div class="profile">
-              <img src="images/jewellery.png" alt="" />
-              <h4>Username</h4>
-            </div>
-            <div class="item-details">
-              <h5>Beirut, Lebanon</h5>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi
-                consequuntur quam asperiores adipisci excepturi, accusantium
-                aliquam eos nostrum natus eum! Lorem, ipsum dolor sit amet
-                consectetur adipisicing elit. Quasi consequuntur quam asperiores
-                adipisci excepturi, accusantium aliquam eos nostrum natus eum!
-              </p>
-              <h5>7th of July 2024</h5>
-            </div>
-          </div>
-          <div class="item">
-            <div class="profile">
-              <img src="images/jewellery.png" alt="" />
-              <h4>Username</h4>
-            </div>
-            <div class="item-details">
-              <h5>Beirut, Lebanon</h5>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi
-                consequuntur quam asperiores adipisci excepturi, accusantium
-                aliquam eos nostrum natus eum! Lorem, ipsum dolor sit amet
-                consectetur adipisicing elit. Quasi consequuntur quam asperiores
-                adipisci excepturi, accusantium aliquam eos nostrum natus eum!
-              </p>
-              <h5>7th of July 2024</h5>
-            </div>
-          </div>
-          <div class="item">
-            <div class="profile">
-              <img src="images/jewellery.png" alt="" />
-              <h4>username</h4>
-            </div>
-            <div class="item-details">
-              <h5>Beirut, Lebanon</h5>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi
-                consequuntur quam asperiores adipisci excepturi, accusantium
-                aliquam eos nostrum natus eum! Lorem, ipsum dolor sit amet
-                consectetur adipisicing elit. Quasi consequuntur quam asperiores
-                adipisci excepturi, accusantium aliquam eos nostrum natus eum!
-              </p>
-              <h5>7th of July 2024</h5>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-btn next-btn">&#10095;</button>
-      </div>
 
+
+         
+          </div>
+          <br>
+          <br>
+        <!-- </div>
+        <button class="carousel-btn next-btn">&#10095;</button>
+      </div> -->
+<!-- 
       <div class="feedback-dots">
         <span class="dot active"></span>
         <span class="dot"></span>
@@ -350,7 +309,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
         <span class="dot"></span>
         <span class="dot"></span>
       </div>
-    </div>
+    </div> -->
 
     <div class="quote">
       <div class="container">

@@ -2,12 +2,12 @@
 session_start();
 include_once '../config/db.php';
 
-// Ensure the user is logged in
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(403); // Forbidden
-    echo json_encode(['error' => 'User not logged in']);
+    header("Location: login.php"); // Redirect to login page if not logged in
     exit();
 }
+
 
 // Ensure the request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -2,11 +2,13 @@
 session_start();
 include '../config/db.php';
 
-// Check if the user is logged in
+
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login page
+    header("Location: login.php"); // Redirect to login page if not logged in
     exit();
 }
+
 
 // Get user information from the database
 $user_id = $_SESSION['user_id'];

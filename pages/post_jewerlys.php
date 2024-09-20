@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         echo "<script>alert('Jewelry posted successfully.');</script>";
-        header("Location: post_jewelry.php");
+        header("Location: post_jewelrys.php");
     } else {
         echo "Error: " . $stmt->errorInfo()[2];
     }

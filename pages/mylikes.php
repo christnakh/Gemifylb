@@ -1,21 +1,13 @@
 <?php
-session_start();
+include '../config/db.php';
+// Initialize product variable
 
-// Database connection
-$host = 'localhost';
-$user = 'root';
-$pass = 'root';
-$db = 'Gemify';
-
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    die();
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
 }
 
-// Initialize product variable
 $product = null;
 
 // Check if POST data (type and id) is received

@@ -1,10 +1,18 @@
 <?php
-session_start();
+
 
 // Include database connection
 include_once '../config/db.php';
-
 // Initialize product variable
+
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if not logged in
+    exit();
+}
+
+
 $product = null;
 
 // Check if POST data (type and id) is received
@@ -242,6 +250,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 <?php if (!empty($productDetails['phone_number'])): ?>
                     <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($productDetails['phone_number']); ?></p>
                 <?php endif; ?>
+                <!-- Button to view all products by this user -->
+                <a href="view_user_products.php?user_id=<?php echo htmlspecialchars($product['user_id']); ?>" class="btn btn-primary">View All Products by This User</a>
+
                 <br><br>
                 <?php if (!empty($productDetails['video'])): ?>
                     <h2>Video</h2>
