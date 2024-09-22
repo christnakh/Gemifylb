@@ -17,11 +17,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
-        echo "Login successful!";
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['role'] = $user['role'];
-        header("Location: products.php");
+
+        // Redirect based on user role
+        if ($user['role'] === 'admin') {
+            header("Location: admin/dashboard.php"); // Redirect to admin page
+        } else {
+            header("Location: ../index.php"); // Redirect to index page for regular users
+        }
         exit();
     } else {
         echo "Invalid email or password!";
