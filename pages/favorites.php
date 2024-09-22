@@ -120,6 +120,13 @@ try {
     <title>My Favorite Products</title>
     <link rel="stylesheet" href="../css/products.css">
     <link rel="stylesheet" href="../css/global.css">
+
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+        <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>

@@ -76,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Post a Watch</title>
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->

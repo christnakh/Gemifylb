@@ -94,6 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Post a Black Diamond</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <script>
         function toggleShapeInput(value) {
             if (value === 'fancy') {

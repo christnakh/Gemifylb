@@ -43,10 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="path/to/bootstrap.css">
     <link rel="stylesheet" href="path/to/your-custom.css">
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
+
 </head>
 
 <body>

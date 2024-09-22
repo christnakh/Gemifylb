@@ -39,10 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Contact Us</title>
+                <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
           <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
+
     </head>
 </head>
 

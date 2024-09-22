@@ -84,9 +84,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <script>
-        // Optional: Add any JavaScript functions if needed
-    </script>
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>

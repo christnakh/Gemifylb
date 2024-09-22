@@ -96,6 +96,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Include any necessary CSS or JavaScript files -->
     <link rel="stylesheet" href="../css/styles.css">
     <script src="../js/post_gemstones.js"></script>
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->

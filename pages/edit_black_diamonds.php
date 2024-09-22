@@ -76,7 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Black Diamond</title>
-    <link rel="stylesheet" href="../assets/style.css"> <!-- Add your CSS file here -->
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+        <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <?php include '../includes/header.php';?>

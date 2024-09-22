@@ -176,6 +176,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
     <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../css/global.css"> 
     <link rel="stylesheet" href="../css/product_details.css"> 
+      <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->

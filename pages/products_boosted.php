@@ -127,6 +127,8 @@ try {
     <link rel="stylesheet" href="../css/products.css">
     <link rel="stylesheet" href="../css/global.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <script>

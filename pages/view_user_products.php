@@ -191,44 +191,13 @@ $query = "
     <link rel="stylesheet" href="../css/products.css">
     <link rel="stylesheet" href="../css/global.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Android -->
+    <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <script>
-        $(document).ready(function() {
-    $('.favorite-btn').click(function() {
-        var button = $(this);
-        var productId = button.data('id');
-        var productType = button.data('type');
-
-        $.ajax({
-            url: 'toggle_favorite.php',
-            type: 'POST',
-            data: {
-                id: productId,
-                type: productType
-            },
-            dataType: 'json',
-            success: function(response) {
-                console.log(response); // Debugging output
-
-                if (response.status === 'added') {
-                    button.text('Unfavorite').removeClass('btn-primary').addClass('btn-secondary');
-                } else if (response.status === 'removed') {
-                    button.text('Favorite').removeClass('btn-secondary').addClass('btn-primary');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error: ', status, error); // Debugging output
-                alert('An error occurred while processing your request.');
-            }
-        });
-    });
-});
-
-
-    </script>
+   
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
@@ -411,6 +380,40 @@ $query = "
     </div>
 
     <script src="../js/slider.js"></script>
+        <script>
+            $(document).ready(function() {
+        $('.favorite-btn').click(function() {
+            var button = $(this);
+            var productId = button.data('id');
+            var productType = button.data('type');
+
+            $.ajax({
+                url: 'toggle_favorite.php',
+                type: 'POST',
+                data: {
+                    id: productId,
+                    type: productType
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response); // Debugging output
+
+                    if (response.status === 'added') {
+                        button.text('Unfavorite').removeClass('btn-primary').addClass('btn-secondary');
+                    } else if (response.status === 'removed') {
+                        button.text('Favorite').removeClass('btn-secondary').addClass('btn-primary');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error: ', status, error); // Debugging output
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+
+
+    </script>
     <?php include '../includes/footer.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

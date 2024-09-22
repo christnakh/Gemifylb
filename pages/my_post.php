@@ -41,6 +41,12 @@ foreach ($product_queries as $category => $query) {
     <title>My Posts</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/my_post.css">
+    <!-- Favicon -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+        <!-- other meta tags and elements -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes">
     <style>
         body {
             font-family: Arial, sans-serif;
