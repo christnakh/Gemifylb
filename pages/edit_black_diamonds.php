@@ -127,7 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         <label for="video_diamond">Diamond Video:</label>
         <input type="file" id="video_diamond" name="video_diamond">
         <p>Current Diamond Video:</p>
-        <?php if ($product['video_diamond']): ?>
+        <?php if ($product['video_diamond']):echo $product['video_diamond'] ?>
+            
             <video src="<?= htmlspecialchars($product['video_diamond']) ?>" width="200" controls></video>
         <?php endif; ?>
     </div>
