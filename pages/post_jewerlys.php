@@ -59,8 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':is_approved', $is_approved);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Jewelry posted successfully.');</script>";
-        header("Location: post_jewelrys.php");
+        echo "<script>alert('Your jewerly has been successfully posted. Please await admin confirmation.');</script>";
+                header("Location: my_post.php");
     } else {
         echo "Error: " . $stmt->errorInfo()[2];
     }

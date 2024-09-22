@@ -92,14 +92,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(13, $user_id);
 
         if ($stmt->execute()) {
-            echo "<script>alert('Diamond posted successfully.');</script>";
-            header("location: post_diamonds.php");
+            echo "<script>alert('Your diamond has been successfully posted. Please await admin confirmation.');</script>";
+                header("Location: my_post.php");
         } else {
             echo "Error: " . $stmt->errorInfo()[2];
         }
         $conn = null; // Close the connection
     }
 }
+
 ?>
 
 
@@ -197,7 +198,7 @@ function toggleOtherShapeInput(value) {
                             <div class="form-group mb-3">
                                 <label for="photo_certificate">Photo of Certificate:</label>
                                 <div class="custom-file">
-                                    <input type="file" id="photo_certificate" name="photo_certificate" class="custom-file-input" accept=".jpg, .jpeg, .png, .gif" required>
+                                    <input type="file" id="photo_certificate" name="photo_certificate" class="custom-file-input"  required>
                                     <label class="custom-file-label form-control rounded-pill border-0 px-4" for="photo_certificate">Choose file</label>
                                 </div>
                             </div>
@@ -205,7 +206,7 @@ function toggleOtherShapeInput(value) {
                             <div class="form-group mb-3">
                                 <label for="photo_diamond">Photo of Diamond:</label>
                                 <div class="custom-file">
-                                    <input type="file" id="photo_diamond" name="photo_diamond" class="custom-file-input" accept=".jpg, .jpeg, .png, .gif" required>
+                                    <input type="file" id="photo_diamond" name="photo_diamond" class="custom-file-input"  required>
                                     <label class="custom-file-label form-control rounded-pill border-0 px-4" for="photo_diamond">Choose file</label>
                                 </div>
                             </div>

@@ -1,14 +1,6 @@
 <?php
 include_once '../config/db.php';
 
-
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
-    exit();
-}
-
-
 // Constants for pagination
 $perPage = 15; // Products per page
 
@@ -21,7 +13,7 @@ $sort = isset($_GET['sort']) ? $_GET['sort'] : 'name_asc';
 $orderBy = 'name ASC'; // Default sorting
 $onlyFavorites = false;
 
-$user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+$user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
 
 // Prepare sorting based on user input
 switch ($sort) {

@@ -76,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':user_id', $user_id);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Gemstone posted successfully.');</script>";
-        header("Location: post_gemstones.php");
+        echo "<script>alert('Your gemstone has been successfully posted. Please await admin confirmation.');</script>";
+        header("Location: my_post.php");
         exit();
     } else {
         echo "Error: " . $stmt->errorInfo()[2];

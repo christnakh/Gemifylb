@@ -163,28 +163,148 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products</title>
     <style>
+    /* Reset some basic elements */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Container for the main content */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header styles */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+
+/* Section headers */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Product Grid */
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Individual product card */
+.product-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Product image */
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Product details */
+.product-name {
+    font-size: 1.2em;
+    padding: 10px;
+    text-align: center;
+}
+
+.product-weight,
+.product-price {
+    padding: 5px 10px;
+    text-align: center;
+}
+
+/* Favorite button */
+.favorite-btn {
+    background-color: #28a745;
+}
+
+.favorite-btn:hover {
+    background-color: #218838;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
     .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+        flex-direction: column;
+        align-items: flex-start;
     }
+    
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .products {
+        grid-template-columns: 1fr;
+    }
+}
 
-    .view-all-btn {
-        padding: 5px 10px; /* Adjusted padding for a smaller button */
-        font-size: 14px; /* Smaller font size */
-        text-decoration: none;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-    }
-
-    .view-all-btn:hover {
-        background-color: #0056b3;
-        color: white !important;
-        text-decoration: none !important;
-    }
 </style>
 
     <link rel="stylesheet" href="../css/products.css">
@@ -375,17 +495,17 @@ try {
                         <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
                     </p>
                     <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
-    <?php
-    $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
-    $stmtFavorite = $conn->prepare($queryFavorite);
-    $stmtFavorite->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmtFavorite->bindParam(':product_id', $product['id'], PDO::PARAM_INT);
-    $stmtFavorite->bindParam(':product_type', $product['type'], PDO::PARAM_STR);
-    $stmtFavorite->execute();
-    $isFavorited = $stmtFavorite->fetchColumn() > 0;
-    echo $isFavorited ? 'Unfavorite' : 'Favorite';
-    ?>
-</button>
+                        <?php
+                        $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
+                        $stmtFavorite = $conn->prepare($queryFavorite);
+                        $stmtFavorite->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+                        $stmtFavorite->bindParam(':product_id', $product['id'], PDO::PARAM_INT);
+                        $stmtFavorite->bindParam(':product_type', $product['type'], PDO::PARAM_STR);
+                        $stmtFavorite->execute();
+                        $isFavorited = $stmtFavorite->fetchColumn() > 0;
+                        echo $isFavorited ? 'Unfavorite' : 'Favorite';
+                        ?>
+                    </button>
                     <form class="view-details-form" action="view_products_info.php" method="post">
                         <input type="hidden" name="type" value="<?= htmlspecialchars($product['type']) ?>">
                         <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">

@@ -251,7 +251,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                     <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($productDetails['phone_number']); ?></p>
                 <?php endif; ?>
                 <!-- Button to view all products by this user -->
-                <a href="view_user_products.php?user_id=<?php echo htmlspecialchars($product['user_id']); ?>" class="btn btn-primary">View All Products by This User</a>
+                <form action="view_user_products.php" method="POST">
+                    <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($product['user_id']); ?>">
+                    <button type="submit">View User Products</button>
+                </form>
+
 
                 <br><br>
                 <?php if (!empty($productDetails['video'])): ?>

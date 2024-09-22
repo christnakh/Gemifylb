@@ -197,7 +197,7 @@ try {
             <?php endif; ?>
         </div>
     </div>
-
+    <script src="../js/slider.js"></script>
     <?php include '../includes/footer.php'; ?>
 </body>
 </html>

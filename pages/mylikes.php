@@ -209,7 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
             <a href="javascript:history.back()" class="btn btn-submit">Back</a>
         </div>
     </div>
-
+    <script src="../js/slider.js"></script>
     <?php include '../includes/footer.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

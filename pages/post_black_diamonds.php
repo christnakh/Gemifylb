@@ -71,8 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(8, $user_id);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Black diamond posted successfully.');</script>";
-                header("Location: post_black_diamonds.php");
+                echo "<script>alert('Your black diamond has been successfully posted. Please await admin confirmation.');</script>";
+                header("Location: my_post.php");
                 exit();
             } else {
                 echo "Error: " . $stmt->errorInfo()[2];
