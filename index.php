@@ -11,7 +11,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemify Landing Page</title>  
+  <title>Gemify</title>  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -21,10 +21,10 @@ $isLoggedIn = isset($_SESSION['user_id']);
   <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
-    <meta name="mobile-web-app-capable" content="yes">\
+    <meta name="mobile-web-app-capable" content="yes">
 
   <!-- Favicon -->
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
   <!-- Meta Description -->
   <meta name="description" content="GemifyLB is your premier jewelry marketplace where you can discover and post an exquisite collection of jewelry, watches, gadgets, diamonds, gemstones, and more. Join our community and find unique treasures or sell your own!">
   <!-- Meta KeyWoards -->

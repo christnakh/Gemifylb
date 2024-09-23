@@ -12,6 +12,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="../css/global.css">
 
 </head>
@@ -64,13 +65,19 @@ $isLoggedIn = isset($_SESSION['user_id']);
                             <a class="nav-link text-white" href="products.php">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="favorites.php">Likes</a>
+                               <a class="nav-link text-white" href="favorites.php">
+                                <span class="material-icons">favorite</span>
+                            </a>    
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="profile.php">Profile</a>
+                            <a class="nav-link text-white" href="profile.php">
+                                <span class="material-icons">person</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="logout.php">Logout</a>
+                            <a class="nav-link text-white" href="logout.php">
+                                <span class="material-icons">logout</span>
+                            </a>
                         </li>
                     <?php else: ?>
                         <!-- <li class="nav-item">
