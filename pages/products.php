@@ -293,7 +293,6 @@ header {
     background-color: #007bff;
     color: white;
 }
-
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .section-header {
