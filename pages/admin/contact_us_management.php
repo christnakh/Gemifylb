@@ -1,9 +1,36 @@
 <?php
-// Include your database configuration and any necessary PHP logic here
-include '../../config/db.php';
+// Include database connection
+include '../../config/db.php'; // Ensure this path is correct
 
-// Fetch necessary data or perform any logic needed
-// For example, fetching data for different sections of your admin panel
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Query to fetch messages sorted from newest to oldest
+$query = "SELECT * FROM contact_us ORDER BY submitted_at DESC";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Check if the form is submitted to mark messages as read or unread
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['mark_read'])) {
+        $id = $_POST['message_id'];
+        $update_query = "UPDATE contact_us SET `read` = 1 WHERE id = :id";
+        $stmt = $conn->prepare($update_query);
+        $stmt->execute(['id' => $id]);
+    }
+    if (isset($_POST['mark_unread'])) {
+        $id = $_POST['message_id'];
+        $update_query = "UPDATE contact_us SET `read` = 0 WHERE id = :id";
+        $stmt = $conn->prepare($update_query);
+        $stmt->execute(['id' => $id]);
+    }
+
+    // Refresh the page after marking as read/unread
+    header("Location: contact_us_management.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,12 +38,13 @@ include '../../config/db.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Contact Us Management</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
         .sidebar {
             position: fixed;
@@ -26,9 +54,6 @@ include '../../config/db.php';
             z-index: 100;
             padding: 48px 0 0;
             box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            background-color: #343a40; /* Dark background color */
-            color: #fff; /* Light text color */
-            overflow-y: auto;
         }
         .sidebar-sticky {
             position: -webkit-sticky;
@@ -40,7 +65,7 @@ include '../../config/db.php';
             overflow-y: auto;
         }
         .nav-link.active {
-            color: #007bff; /* Active link color */
+            color: #007bff;
         }
         .nav-link {
             font-size: 1.1rem;
@@ -49,28 +74,44 @@ include '../../config/db.php';
         .nav-link i {
             margin-right: 10px;
         }
-        .header {
-            margin-bottom: 20px;
-        }
-        .container .row .btn {
+        .message-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
+            flex-direction: column;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
             padding: 20px;
+            background-color: #fff;
         }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #f8f9fa;
-            color: #343a40; /* Dark background color */
-        }
-        .table-warning {
+        .message-container.unread {
             background-color: #fff3cd;
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .message-header .message-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .message-header .message-info span {
+            font-size: 1rem;
+        }
+        .message-body {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #495057;
+        }
+        .message-actions {
+            margin-top: 10px;
         }
         .btn-secondary {
             background-color: #6c757d;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #007bff;
             border: none;
         }
     </style>
@@ -78,13 +119,12 @@ include '../../config/db.php';
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                     <h4 class="text-center my-4">Admin Panel</h4>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="dashboard.php">
+                            <a class="nav-link active" href="#">
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
                             </a>
                         </li>
@@ -108,37 +148,51 @@ include '../../config/db.php';
                                 <i class="fas fa-envelope"></i> Contact Us Management
                             </a>
                         </li>
-                        <!-- Add more sidebar links as needed -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="../logout.php">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
 
-            <!-- Main Content -->
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <!-- Page Header -->
                 <header class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Admin Panel</h1>
+                    <h1 class="h2">Contact Us Messages</h1>
                 </header>
 
-                <!-- Example Content - Replace with your content -->
-                <div class="container my-5">
-                    <h2>Welcome to the Admin Panel</h2>
-                    <p>This is the main content area. Replace this with your specific content for the admin panel.</p>
-                </div>
-
-                <!-- Footer -->
-                <footer class="footer mt-auto py-3 bg-light">
-                    <div class="container text-center">
-                        <span class="text-muted">&copy; 2024 Admin Dashboard</span>
+                <!-- Messages Flexbox -->
+                <?php foreach ($messages as $row): ?>
+                    <div class="message-container <?= $row['read'] ? '' : 'unread' ?>">
+                        <div class="message-header">
+                            <div class="message-info">
+                                <span><strong>Name:</strong> <?= htmlspecialchars($row['name']) ?></span>
+                                <span><strong>Email:</strong> <?= htmlspecialchars($row['email']) ?></span>
+                                <span><strong>Submitted At:</strong> <?= htmlspecialchars($row['submitted_at']) ?></span>
+                            </div>
+                            <div>
+                                <span><strong>Status:</strong> <?= $row['read'] ? 'Read' : 'Unread' ?></span>
+                            </div>
+                        </div>
+                        <div class="message-body">
+                            <strong>Subject:</strong> <?= htmlspecialchars($row['subject']) ?><br>
+                            <strong>Message:</strong> <?= htmlspecialchars($row['message']) ?>
+                        </div>
+                        <div class="message-actions">
+                            <form method="POST" action="">
+                                <input type="hidden" name="message_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                <?php if ($row['read']): ?>
+                                    <button type="submit" name="mark_unread" class="btn btn-secondary">Mark as Unread</button>
+                                <?php else: ?>
+                                    <button type="submit" name="mark_read" class="btn btn-primary">Mark as Read</button>
+                                <?php endif; ?>
+                            </form>
+                        </div>
                     </div>
-                </footer>
+                <?php endforeach; ?>
             </main>
         </div>
     </div>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

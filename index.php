@@ -68,17 +68,32 @@ $isLoggedIn = isset($_SESSION['user_id']);
                                 <li><a class="dropdown-item" href="pages/post_gadgets.php">Gadgets</a></li>
                             </ul>
                         </li>
+                              <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button">
+                                Rapaport
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="../uploads/rapaport/pear.pdf">Pear</a></li>
+                                <li><a class="dropdown-item" href="../uploads/rapaport/round.pdf">Round</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="pages/products.php">Products</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="pages/favorites.php">Likes</a>
+                                      <li class="nav-item">
+                            <a class="nav-link text-white" href="pages/favorites.php">
+                                <i class="fas fa-heart"></i> <!-- Solid heart icon (bold) -->
+                            </a>    
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="pages/profile.php">Profile</a>
+                            <a class="nav-link text-white" href="pages/profile.php">
+                                <i class="fas fa-user"></i> <!-- Solid user icon (bold) -->
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="pages/logout.php">Logout</a>
+                            <a class="nav-link text-white" href="pages/logout.php">
+                                <i class="fas fa-sign-out-alt"></i> <!-- Solid logout icon (bold) -->
+                            </a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">

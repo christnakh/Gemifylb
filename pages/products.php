@@ -32,6 +32,7 @@ switch ($sort) {
     case 'weight_asc':
         $orderBy = 'weight ASC';
         break;
+        
     case 'weight_desc':
         $orderBy = 'weight DESC';
         break;
@@ -164,151 +165,49 @@ try {
     <title>All Products</title>
         <!-- Favicon -->
   <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <style>
     /* Reset some basic elements */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    .product{
+    background-color: white !important;
 }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
-}
-
-/* Container for the main content */
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Header styles */
-header {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 0;
-    text-align: center;
-}
-
-/* Section headers */
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
-/* Buttons */
-.btn {
-    background-color: #007bff;
+.view-all-btn {
+    width: 30% !important;
+    background-color: #007bff; /* Bootstrap primary color */
     color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-/* Product Grid */
-.products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-/* Individual product card */
-.product-card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.2s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Product image */
-.product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-/* Product details */
-.product-name {
-    font-size: 1.2em;
-    padding: 10px;
-    text-align: center;
-}
-
-.product-weight,
-.product-price {
-    padding: 5px 10px;
-    text-align: center;
-}
-
-/* Favorite button */
-.favorite-btn {
-    background-color: #28a745;
-}
-
-.favorite-btn:hover {
-    background-color: #218838;
-}
-
-/* Pagination */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.pagination a {
-    margin: 0 5px;
-    padding: 10px 15px;
-    border: 1px solid #007bff;
     border-radius: 5px;
     text-decoration: none;
-    color: #007bff;
-    transition: background-color 0.3s;
 }
 
-.pagination a:hover {
-    background-color: #007bff;
+.view-all-btn:hover {
+    background-color: #0056b3; /* Darker shade for hover */
     color: white;
 }
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .btn {
-        width: 100%;
-        margin-top: 10px;
-    }
-    
-    .products {
-        grid-template-columns: 1fr;
-    }
+
+.boostedTitle{
+    width: 30% !important;
 }
+
+.BoostedContainer{
+    width: 70% !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 
 </style>
 
@@ -361,8 +260,8 @@ header {
 
     <section id="boosted-products">
     <div class="section-header">
-        <h2>Boosted Products</h2>
-        <a href="products_boosted.php" class="view-all-btn">View All Boosted Products</a>
+        <h2 class="boostedTitle">Boosted Products</h2>
+        <div class="BoostedContainer"><a href="products_boosted.php" class="view-all-btn btn btn-primary">View All Boosted Products</a></div> <br><br>
     </div>
     <?php if (!empty($boostedProducts)): ?>
         <div class="products">
@@ -396,20 +295,20 @@ header {
                         </div>
                     </div>
                     <?php if (!empty($product['weight'])) : ?>
-                        <p><strong>Weight:</strong> <?= htmlspecialchars($product['weight']) ?> carats</p>
-                    <?php endif; ?>
-                    <?php if (!empty($product['cut'])) : ?>
-                        <p><strong>Cut:</strong> <?= htmlspecialchars($product['cut']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($product['shape'])) : ?>
-                        <p><strong>Shape:</strong> <?= htmlspecialchars($product['shape']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($product['color'])) : ?>
-                        <p><strong>Color:</strong> <?= htmlspecialchars($product['color']) ?></p>
-                    <?php endif; ?>
-                    <p><strong>Price:</strong> 
-                        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
-                    </p>
+        <p><i class="fas fa-weight"></i> <?= htmlspecialchars($product['weight']) ?> carats</p>
+    <?php endif; ?>
+    <?php if (!empty($product['cut'])) : ?>
+        <p><i class="fas fa-cut"></i> <?= htmlspecialchars($product['cut']) ?></p>
+    <?php endif; ?>
+    <?php if (!empty($product['shape'])) : ?>
+        <p><i class="fas fa-shapes"></i> <?= htmlspecialchars($product['shape']) ?></p>
+    <?php endif; ?>
+    <?php if (!empty($product['color'])) : ?>
+        <p><i class="fas fa-paint-brush"></i> <?= htmlspecialchars($product['color']) ?></p>
+    <?php endif; ?>
+    <p><i class="fas fa-dollar-sign"></i> 
+        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
+    </p>
                     <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
                         <?php
                         $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
@@ -437,11 +336,15 @@ header {
 
 
         
-        <h1>All Products</h1>
+        
 
         <!-- Sorting Bar -->
         <form method="GET" id="sorting-form">
-            <label for="sort-by">Sort by:</label>
+
+            <div style="display: flex; flex-direction: row;">
+                <label for="sort-by">Sort by:</label>
+            </div>
+
             <select name="sort" id="sort-by" onchange="document.getElementById('sorting-form').submit();">
                 <option value="name_asc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'name_asc') ? 'selected' : '' ?>>Name (A-Z)</option>
                 <option value="name_desc" <?= (isset($_GET['sort']) && $_GET['sort'] === 'name_desc') ? 'selected' : '' ?>>Name (Z-A)</option>
@@ -453,72 +356,82 @@ header {
         </form>
 
         <div class="products">
-            <?php foreach ($products as $product) : ?>
-                <div class="product">
-                    <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-                    <div class="image-slider">
-                    <div class="slider-container">
-                        <?php
-                        // Determine the correct folder name based on the product type
-                        $folderMapping = [
-                            'diamond' => 'diamond',
-                            'gemstone' => 'gemstones', 
-                            'jewelry' => 'jewelry',
-                            'black_diamond' => 'diamond',
-                            'gadget' => 'gadgets',
-                            'watch' => 'watches'
-                        ];
-                        $folder = isset($folderMapping[$product['type']]) ? $folderMapping[$product['type']] : $product['type'];
-                        ?>
-                        <?php if (!empty($product['photo'])) : ?>
-                            <img src="../uploads/<?= htmlspecialchars($folder) ?>/photo/<?= htmlspecialchars($product['photo']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
-                        <?php endif; ?>
-                        <?php if (!empty($product['certificate'])) : ?>
-                            <img src="../uploads/<?= htmlspecialchars($folder) ?>/certificates/<?= htmlspecialchars($product['certificate']) ?>" alt="Certificate for <?= htmlspecialchars($product['name']) ?>">
-                        <?php endif; ?>
-                    </div>
-
-                        <div class="slider-nav">
-                            <button class="prev">&lt;</button>
-                            <div class="slider-dots"></div>
-                            <button class="next">&gt;</button>
-                        </div>
-                    </div>
-                    <?php if (!empty($product['weight'])) : ?>
-                        <p><strong>Weight:</strong> <?= htmlspecialchars($product['weight']) ?> carats</p>
+    <?php foreach ($products as $product) : ?>
+        <div class="product">
+            <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
+            <div class="image-slider">
+                <div class="slider-container">
+                    <?php
+                    // Determine the correct folder name based on the product type
+                    $folderMapping = [
+                        'diamond' => 'diamond',
+                        'gemstone' => 'gemstones',
+                        'jewelry' => 'jewelry',
+                        'black_diamond' => 'diamond',
+                        'gadget' => 'gadgets',
+                        'watch' => 'watches'
+                    ];
+                    $folder = isset($folderMapping[$product['type']]) ? $folderMapping[$product['type']] : $product['type'];
+                    ?>
+                    <?php if (!empty($product['photo'])) : ?>
+                        <img src="../uploads/<?= htmlspecialchars($folder) ?>/photo/<?= htmlspecialchars($product['photo']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
                     <?php endif; ?>
-                    <?php if (!empty($product['cut'])) : ?>
-                        <p><strong>Cut:</strong> <?= htmlspecialchars($product['cut']) ?></p>
+                    <?php if (!empty($product['certificate'])) : ?>
+                        <img src="../uploads/<?= htmlspecialchars($folder) ?>/certificates/<?= htmlspecialchars($product['certificate']) ?>" alt="Certificate for <?= htmlspecialchars($product['name']) ?>">
                     <?php endif; ?>
-                    <?php if (!empty($product['shape'])) : ?>
-                        <p><strong>Shape:</strong> <?= htmlspecialchars($product['shape']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($product['color'])) : ?>
-                        <p><strong>Color:</strong> <?= htmlspecialchars($product['color']) ?></p>
-                    <?php endif; ?>
-                    <p><strong>Price:</strong> 
-                        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
-                    </p>
-                    <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
-                        <?php
-                        $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
-                        $stmtFavorite = $conn->prepare($queryFavorite);
-                        $stmtFavorite->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-                        $stmtFavorite->bindParam(':product_id', $product['id'], PDO::PARAM_INT);
-                        $stmtFavorite->bindParam(':product_type', $product['type'], PDO::PARAM_STR);
-                        $stmtFavorite->execute();
-                        $isFavorited = $stmtFavorite->fetchColumn() > 0;
-                        echo $isFavorited ? 'Unfavorite' : 'Favorite';
-                        ?>
-                    </button>
-                    <form class="view-details-form" action="view_products_info.php" method="post">
-                        <input type="hidden" name="type" value="<?= htmlspecialchars($product['type']) ?>">
-                        <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
-                        <button type="submit" class="btn btn-submit">View Details</button>
-                    </form>
                 </div>
-            <?php endforeach; ?>
+
+                <div class="slider-nav">
+                    <button class="prev">&lt;</button>
+                    <div class="slider-dots"></div>
+                    <button class="next">&gt;</button>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <?php if (!empty($product['weight'])) : ?>
+                    <p><i class="fas fa-weight-hanging"></i> <?= htmlspecialchars($product['weight']) ?> carats</p>
+                <?php endif; ?>
+                <?php if (!empty($product['cut'])) : ?>
+                    <p><i class="fas fa-gem"></i> <?= htmlspecialchars($product['cut']) ?></p>
+                <?php endif; ?>
+                <?php if (!empty($product['shape'])) : ?>
+                    <p><i class="fas fa-shapes"></i><strong></strong> <?= htmlspecialchars($product['shape']) ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($product['color'])) : ?>
+                    <p><i class="fas fa-paint-brush"></i> <?= htmlspecialchars($product['color']) ?></p>
+                <?php endif; ?>
+                <p><i class="fas fa-dollar-sign"></i> 
+                    <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
+                </p>
+            </div>
+
+            <div class="actions">
+                <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
+                    <?php
+                    $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
+                    $stmtFavorite = $conn->prepare($queryFavorite);
+                    $stmtFavorite->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+                    $stmtFavorite->bindParam(':product_id', $product['id'], PDO::PARAM_INT);
+                    $stmtFavorite->bindParam(':product_type', $product['type'], PDO::PARAM_STR);
+                    $stmtFavorite->execute();
+                    $isFavorited = $stmtFavorite->fetchColumn() > 0;
+                    echo $isFavorited ? 'Unfavorite' : 'Favorite';
+                    ?>
+                </button>
+                <form class="view-details-form" action="view_products_info.php" method="post">
+                    <input type="hidden" name="type" value="<?= htmlspecialchars($product['type']) ?>">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($product['id']) ?>">
+                    <button type="submit" class="btn btn-submit">View Details</button>
+                </form>
+            </div>
         </div>
+    <?php endforeach; ?>
+</div>
+
+
+
 
         <!-- Pagination -->
         <div class="pagination">

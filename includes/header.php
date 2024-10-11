@@ -10,9 +10,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="../css/global.css">
 
 </head>
@@ -65,18 +64,18 @@ $isLoggedIn = isset($_SESSION['user_id']);
                             <a class="nav-link text-white" href="products.php">Products</a>
                         </li>
                         <li class="nav-item">
-                               <a class="nav-link text-white" href="favorites.php">
-                                <span class="material-icons">favorite</span>
+                            <a class="nav-link text-white" href="favorites.php">
+                                <i class="fas fa-heart"></i> <!-- Solid heart icon (bold) -->
                             </a>    
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="profile.php">
-                                <span class="material-icons">person</span>
+                                <i class="fas fa-user"></i> <!-- Solid user icon (bold) -->
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="logout.php">
-                                <span class="material-icons">logout</span>
+                                <i class="fas fa-sign-out-alt"></i> <!-- Solid logout icon (bold) -->
                             </a>
                         </li>
                     <?php else: ?>

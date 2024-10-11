@@ -7,13 +7,24 @@ include '../../config/db.php';
 // Fetch posts based on status (pending, accepted, declined)
 function fetchPostsByStatus($conn, $status) {
     try {
-        // Query to fetch posts based on status
         $stmt = $conn->prepare('
             (SELECT id, "diamond" AS type, nature AS name, photo_diamond AS photo1, video_diamond AS video, weight, clarity, color, user_id, is_approved
             FROM diamond WHERE is_approved = :status)
             UNION ALL
             (SELECT id, "gemstone" AS type, gemstone_name AS name, photo_gemstone AS photo1, video_gemstone AS video, weight, cut, color, user_id, is_approved
             FROM gemstone WHERE is_approved = :status)
+            UNION ALL
+            (SELECT id, "gadget" AS type, title AS name, photo_gadget AS photo1, video_gadget AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
+            FROM gadgets WHERE is_approved = :status)
+            UNION ALL
+            (SELECT id, "jewelry" AS type, title AS name, photo_jewelry AS photo1, NULL AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
+            FROM jewelry WHERE is_approved = :status)
+            UNION ALL
+            (SELECT id, "watch" AS type, title AS name, photo_watch AS photo1, NULL AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
+            FROM watches WHERE is_approved = :status)
+            UNION ALL
+            (SELECT id, "black_diamond" AS type, name AS name, photo_diamond AS photo1, video_diamond AS video, weight, NULL AS clarity, NULL AS color, user_id, is_approved
+            FROM black_diamonds WHERE is_approved = :status)
             ORDER BY id DESC
         ');
         $stmt->bindParam(':status', $status);
@@ -26,12 +37,33 @@ function fetchPostsByStatus($conn, $status) {
     }
 }
 
-// Fetch pending, accepted, and declined posts
-$pendingPosts = fetchPostsByStatus($conn, 'pending');
-$acceptedPosts = fetchPostsByStatus($conn, 'accept');
-$declinedPosts = fetchPostsByStatus($conn, 'decline');
+// Fetch boosted posts
+function fetchBoostedPosts($conn) {
+    try {
+        $stmt = $conn->prepare('
+            SELECT id, type, name, photo1, video, user_id FROM (
+                SELECT id, "diamond" AS type, nature AS name, photo_diamond AS photo1, video_diamond AS video, user_id FROM diamond WHERE boost = 1
+                UNION ALL
+                SELECT id, "gemstone" AS type, gemstone_name AS name, photo_gemstone AS photo1, video_gemstone AS video, user_id FROM gemstone WHERE boost = 1
+                UNION ALL
+                SELECT id, "gadget" AS type, title AS name, photo_gadget AS photo1, video_gadget AS video, user_id FROM gadgets WHERE boost = 1
+                UNION ALL
+                SELECT id, "jewelry" AS type, title AS name, photo_jewelry AS photo1, NULL AS video, user_id FROM jewelry WHERE boost = 1
+                UNION ALL
+                SELECT id, "watch" AS type, title AS name, photo_watch AS photo1, NULL AS video, user_id FROM watches WHERE boost = 1
+                UNION ALL
+                SELECT id, "black_diamond" AS type, name AS name, photo_diamond AS photo1, video_diamond AS video, user_id FROM black_diamonds WHERE boost = 1
+            ) AS boosted_products
+        ');
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        return [];
+    }
+}
 
-// Handle post approval or decline
+// Handle post approval, decline, boosting, and unboosting
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['action']) && isset($_POST['post_id'])) {
         $action = $_POST['action'];
@@ -39,34 +71,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             if ($action === 'approve') {
-                // Update diamond or gemstone table based on post type
-                $table = ($_POST['post_type'] === 'diamond') ? 'diamond' : 'gemstone';
-                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'accept' WHERE id = :id");
+                $table = $_POST['post_type'];
+                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'Accept' WHERE id = :id");
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
 
                 // Notify user of approval
-                $message = "Your " . ucfirst($_POST['post_type']) . " post with ID $post_id has been approved.";
+                $message = "Your " . ucfirst($table) . " post with ID $post_id has been approved.";
                 $sender_id = $_SESSION['user_id'];
-                $receiver_id = fetchPostUserId($conn, $post_id); // Function to fetch post owner's user_id
+                $receiver_id = fetchPostUserId($conn, $post_id);
                 insertNotification($conn, $sender_id, $receiver_id, $message);
 
             } elseif ($action === 'decline') {
-                // Update diamond or gemstone table based on post type
-                $table = ($_POST['post_type'] === 'diamond') ? 'diamond' : 'gemstone';
-                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'decline', decline_reason = :reason WHERE id = :id");
-                $stmt->bindParam(':reason', $_POST['decline_reason']);
+                $table = $_POST['post_type'];
+                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'Decline' WHERE id = :id");
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
 
                 // Notify user of decline
-                $message = "Your " . ucfirst($_POST['post_type']) . " post with ID $post_id has been declined. Reason: " . $_POST['decline_reason'];
+                $message = "Your " . ucfirst($table) . " post with ID $post_id has been declined.";
                 $sender_id = $_SESSION['user_id'];
-                $receiver_id = fetchPostUserId($conn, $post_id); // Function to fetch post owner's user_id
+                $receiver_id = fetchPostUserId($conn, $post_id);
                 insertNotification($conn, $sender_id, $receiver_id, $message);
+
+            } elseif ($action === 'boost') {
+                // Logic to boost the post
+                $table = $_POST['post_type'];
+                $stmt = $conn->prepare("UPDATE $table SET boost = 1 WHERE id = :id");
+                $stmt->bindParam(':id', $post_id);
+                $stmt->execute();
+
+                // Notify user of boosting
+                $message = "Your " . ucfirst($table) . " post with ID $post_id has been boosted.";
+                $sender_id = $_SESSION['user_id'];
+                $receiver_id = fetchPostUserId($conn, $post_id);
+                insertNotification($conn, $sender_id, $receiver_id, $message);
+            } elseif ($action === 'unboost') {
+                // Logic to unboost the post
+                $table = $_POST['post_type'];
+                $stmt = $conn->prepare("UPDATE $table SET boost = 0 WHERE id = :id");
+                $stmt->bindParam(':id', $post_id);
+                $stmt->execute();
             }
 
-            // Redirect to avoid form resubmission on refresh
             header('Location: post_management.php');
             exit();
         } catch (PDOException $e) {
@@ -77,11 +124,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Function to fetch user_id of post owner
 function fetchPostUserId($conn, $post_id) {
-    // Implement your logic to fetch the user_id based on post_id
-    // Example:
     try {
-        // Determine table based on post_id (diamond or gemstone)
-        $table = (strpos($post_id, 'D') === 0) ? 'diamond' : 'gemstone';
+        // Determine table based on post_id (implement your logic)
+        $table = (strpos($post_id, 'D') === 0) ? 'diamond' : (strpos($post_id, 'G') === 0 ? 'gemstone' : (strpos($post_id, 'B') === 0 ? 'black_diamonds' : 'gadgets'));
         $stmt = $conn->prepare("SELECT user_id FROM $table WHERE id = :id");
         $stmt->bindParam(':id', $post_id);
         $stmt->execute();
@@ -105,6 +150,12 @@ function insertNotification($conn, $sender_id, $receiver_id, $message) {
         echo "Error: " . $e->getMessage();
     }
 }
+
+// Fetching posts
+$pendingPosts = fetchPostsByStatus($conn, 'Pending');
+$acceptedPosts = fetchPostsByStatus($conn, 'Accept');
+$declinedPosts = fetchPostsByStatus($conn, 'Decline');
+$boostedPosts = fetchBoostedPosts($conn);
 ?>
 
 <!DOCTYPE html>
@@ -114,281 +165,182 @@ function insertNotification($conn, $sender_id, $receiver_id, $message) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Management</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            display: flex;
         }
         .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 48px 0 0;
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-        }
-        .sidebar-sticky {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        .nav-link.active {
-            color: #007bff;
-        }
-        .nav-link {
-            font-size: 1.1rem;
-            padding: 15px;
-        }
-        .nav-link i {
-            margin-right: 10px;
-        }
-        .header {
-            margin-bottom: 20px;
-        }
-        .container .row .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            padding: 10px 15px;
-        }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            width: 200px;
             background-color: #f8f9fa;
-        }
-        .table-warning {
-            background-color: #fff3cd;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-        }
-        .post-details {
-            margin-top: 20px;
-        }
-        .post-details img {
-            max-width: 100%;
-            height: auto;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
-            overflow: hidden;
-            margin-top: 20px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            padding: 15px;
+            position: fixed;
             height: 100%;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+        }
+        .post-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .post-image {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .post-buttons {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                    <h4 class="text-center my-4">Admin Panel</h4>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="dashboard.php">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="user_management.php">
-                                <i class="fas fa-users"></i> User Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="post_management.php">
-                                <i class="fas fa-newspaper"></i> Post Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="rapaport_management.php">
-                                <i class="fas fa-file-alt"></i> Rapaport Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="logout.php">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div class="header pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Post Management</h1>
-                </div>
 
-                <!-- Pending Posts -->
-                <h2 class="mt-3 mb-3">Pending Posts</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Photo</th>
-                                <th>Video</th>
-                                <th>Weight</th>
-                                <th>Clarity / Cut</th>
-                                <th>Color</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($pendingPosts as $post): ?>
-                            <tr>
-                                <td><?= ucfirst($post['type']) ?></td>
-                                <td><?= $post['name'] ?></td>
-                                <td><img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" width="100"></td>
-                                <td>
-                                    <?php if (!empty($post['video'])): ?>
-                                    <div class="video-container">
-                                        <iframe src="<?= $post['video'] ?>" frameborder="0" allowfullscreen></iframe>
-                                    </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= $post['weight'] ?></td>
-                                <td><?= isset($post['clarity']) ? $post['clarity'] : $post['cut'] ?></td>
-                                <td><?= $post['color'] ?></td>
-                                <td>
-                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                        <input type="hidden" name="post_type" value="<?= $post['type'] ?>">
-                                        <button type="submit" name="action" value="approve" class="btn btn-success mr-2">Approve</button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#declineModal<?= $post['id'] ?>">Decline</button>
-                                    </form>
-                                    <!-- Decline Modal -->
-                                    <div class="modal fade" id="declineModal<?= $post['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="declineModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="declineModalLabel">Decline Post</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                                        <input type="hidden" name="post_type" value="<?= $post['type'] ?>">
-                                                        <div class="form-group">
-                                                            <label for="declineReason">Reason for Decline</label>
-                                                            <textarea class="form-control" id="declineReason" name="decline_reason" rows="3" required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+    <!-- Left-side Navbar -->
+    <div class="sidebar">
+        <h3>Manage Posts</h3>
+        <a href="#">Home</a>
+        <a href="#">Posts</a>
+        <a href="#">Users</a>
+        <a href="#">Settings</a>
+    </div>
 
-                <!-- Accepted Posts -->
-                <h2 class="mt-5 mb-3">Accepted Posts</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Photo</th>
-                                <th>Video</th>
-                                <th>Weight</th>
-                                <th>Clarity / Cut</th>
-                                <th>Color</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($acceptedPosts as $post): ?>
-                            <tr>
-                                <td><?= ucfirst($post['type']) ?></td>
-                                <td><?= $post['name'] ?></td>
-                                <td><img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" width="100"></td>
-                                <td>
-                                    <?php if (!empty($post['video'])): ?>
-                                    <div class="video-container">
-                                        <iframe src="<?= $post['video'] ?>" frameborder="0" allowfullscreen></iframe>
-                                    </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= $post['weight'] ?></td>
-                                <td><?= isset($post['clarity']) ? $post['clarity'] : $post['cut'] ?></td>
-                                <td><?= $post['color'] ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Top Navbar with Boosted, Pending, Accepted, Declined -->
+            <div class="d-flex justify-content-between mb-4">
+                <button class="btn btn-primary" onclick="showSection('pending')">Pending</button>
+                <button class="btn btn-primary" onclick="showSection('accepted')">Accepted</button>
+                <button class="btn btn-primary" onclick="showSection('declined')">Declined</button>
+                <button class="btn btn-primary" onclick="showSection('boosted')">Boosted</button>
+            </div>
 
-                <!-- Declined Posts -->
-                <h2 class="mt-5 mb-3">Declined Posts</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Photo</th>
-                                <th>Video</th>
-                                <th>Weight</th>
-                                <th>Clarity / Cut</th>
-                                <th>Color</th>
-                                <th>Reason for Decline</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($declinedPosts as $post): ?>
-                            <tr>
-                                <td><?= ucfirst($post['type']) ?></td>
-                                <td><?= $post['name'] ?></td>
-                                <td><img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" width="100"></td>
-                                <td>
-                                    <?php if (!empty($post['video'])): ?>
-                                    <div class="video-container">
-                                        <iframe src="<?= $post['video'] ?>" frameborder="0" allowfullscreen></iframe>
-                                    </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= $post['weight'] ?></td>
-                                <td><?= isset($post['clarity']) ? $post['clarity'] : $post['cut'] ?></td>
-                                <td><?= $post['color'] ?></td>
-                                <td><?= $post['decline_reason'] ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+            <!-- Pending Posts Section -->
+            <div id="pendingPosts">
+                <h4>Pending Posts</h4>
+                <div class="row">
+                    <?php foreach ($pendingPosts as $post): ?>
+                    <div class="col-md-4">
+                        <div class="post-card">
+                            <img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" class="post-image">
+                            <h5><?= $post['name'] ?></h5>
+                            <p>Status: Pending</p>
+                            <div class="post-buttons">
+                                <form method="POST" action="">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                                    <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
+                                    <a href="view_product.php?post_id=<?= $post['id'] ?>" class="btn btn-info">View Product</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </main>
+            </div>
+
+            <!-- Accepted Posts Section -->
+            <div id="acceptedPosts" style="display:none;">
+                <h4>Accepted Posts</h4>
+                <div class="row">
+                    <?php foreach ($acceptedPosts as $post): ?>
+                    <div class="col-md-4">
+                        <div class="post-card">
+                            <img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" class="post-image">
+                            <h5><?= $post['name'] ?></h5>
+                            <p>Status: Accepted</p>
+                            <div class="post-buttons">
+                                <form method="POST" action="">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button type="submit" name="action" value="decline" class="btn btn-danger">Decline</button>
+                                    <button type="submit" name="action" value="unboost" class="btn btn-secondary">Unboost</button>
+                                    <a href="view_product.php?post_id=<?= $post['id'] ?>" class="btn btn-info">View Product</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Declined Posts Section -->
+            <div id="declinedPosts" style="display:none;">
+                <h4>Declined Posts</h4>
+                <div class="row">
+                    <?php foreach ($declinedPosts as $post): ?>
+                    <div class="col-md-4">
+                        <div class="post-card">
+                            <img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" class="post-image">
+                            <h5><?= $post['name'] ?></h5>
+                            <p>Status: Declined</p>
+                            <a href="view_product.php?post_id=<?= $post['id'] ?>" class="btn btn-info">View Product</a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Boosted Posts Section -->
+            <div id="boostedPosts" style="display:none;">
+                <h4>Boosted Posts</h4>
+                <div class="row">
+                    <?php foreach ($boostedPosts as $post): ?>
+                    <div class="col-md-4">
+                        <div class="post-card">
+                            <img src="<?= $post['photo1'] ?>" alt="<?= $post['name'] ?>" class="post-image">
+                            <h5><?= $post['name'] ?></h5>
+                            <p>Type: <?= $post['type'] ?></p>
+                            <a href="view_product.php?post_id=<?= $post['id'] ?>" class="btn btn-info">View Product</a>
+                            <div class="post-buttons">
+                                <form method="POST" action="">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button type="submit" name="action" value="unboost" class="btn btn-secondary">Unboost</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Toggle Sections Script -->
+    <script>
+        function showSection(section) {
+            document.getElementById('pendingPosts').style.display = 'none';
+            document.getElementById('acceptedPosts').style.display = 'none';
+            document.getElementById('declinedPosts').style.display = 'none';
+            document.getElementById('boostedPosts').style.display = 'none';
+
+            if (section === 'pending') {
+                document.getElementById('pendingPosts').style.display = 'block';
+            } else if (section === 'accepted') {
+                document.getElementById('acceptedPosts').style.display = 'block';
+            } else if (section === 'declined') {
+                document.getElementById('declinedPosts').style.display = 'block';
+            } else if (section === 'boosted') {
+                document.getElementById('boostedPosts').style.display = 'block';
+            }
+        }
+    </script>
+
 </body>
 </html>

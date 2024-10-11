@@ -78,23 +78,28 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#user-management">
+                            <a class="nav-link" href="user_management.php">
                                 <i class="fas fa-users"></i> User Management
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#post-management">
+                            <a class="nav-link" href="post_management.php">
                                 <i class="fas fa-newspaper"></i> Post Management
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#rapaport-management">
+                            <a class="nav-link" href="rapaport_management.php">
                                 <i class="fas fa-file-alt"></i> Rapaport Management
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#contact-us-management">
+                            <a class="nav-link" href="contact_us_management.php">
                                 <i class="fas fa-envelope"></i> Contact Us Management
+                            </a>
+                        </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="../logout.php">
+                                <i class="fas fa-envelope"></i> Logout
                             </a>
                         </li>
                     </ul>
@@ -128,14 +133,15 @@
                                 <i class="fas fa-envelope"></i> Contact Us Management
                             </a>
                         </div>
+
                     </div>
                 </div>
                 
-                <footer class="footer mt-auto py-3 bg-light">
+                <!-- <footer class="footer mt-auto py-3 bg-light">
                     <div class="container text-center">
                         <span class="text-muted">&copy; 2024 Admin Dashboard</span>
                     </div>
-                </footer>
+                </footer> -->
             </main>
         </div>
     </div>
