@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 <p>Diamond Photo: <?= htmlspecialchars($product['photo_diamond'] ?? 'N/A') ?></p>
 <p>Diamond Video: <?= htmlspecialchars($product['video_diamond'] ?? 'N/A') ?></p>-->
 
-<form action="edit_black_diamond.php" method="POST" enctype="multipart/form-data">
+<form action="edit_black_diamonds.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id'] ?? '') ?>">
 
     <div>

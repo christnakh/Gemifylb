@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 <?php include '../includes/header.php';?>
 <h1>Edit Gemstone</h1>
 
-<form action="edit_gemstones.php" method="POST" enctype="multipart/form-data">
+<form action="edit_gemstone.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
 
     <label for="gemstone_name">Gemstone Name:</label>
