@@ -32,21 +32,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     // Handle image upload
     $photo_jewelry = $product['photo_jewelry'];
     if ($_FILES['photo_jewelry']['name']) {
-        $photo_jewelry = '../uploads/jewelry/photo_jewelry/' . basename($_FILES['photo_jewelry']['name']);
-        move_uploaded_file($_FILES['photo_jewelry']['tmp_name'], $photo_jewelry);
+        $photo_jewelry = basename($_FILES['photo_jewelry']['name']);
+        $photo_jewelry_path = '../uploads/jewelry/photo/' . basename($_FILES['photo_jewelry']['name']);
+        move_uploaded_file($_FILES['photo_jewelry']['tmp_name'], $photo_jewelry_path);
     }
 
     $photo_certificate = $product['photo_certificate'];
     if ($_FILES['photo_certificate']['name']) {
-        $photo_certificate = '../uploads/jewelry/photo_certificate/' . basename($_FILES['photo_certificate']['name']);
-        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate);
+        $photo_certificate = basename($_FILES['photo_certificate']['name']);
+        $photo_certificate_path = '../uploads/jewelry/certificates/' . basename($_FILES['photo_certificate']['name']);
+        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate_path);
     }
 
     // Handle video upload
     $video = $product['video'];
     if ($_FILES['video']['name']) {
-        $video = '../uploads/jewelry/video/' . basename($_FILES['video']['name']);
-        move_uploaded_file($_FILES['video']['tmp_name'], $video);
+        $video = basename($_FILES['video']['name']);
+        $video_path = '../uploads/jewelry/video/' . basename($_FILES['video']['name']);
+        move_uploaded_file($_FILES['video']['tmp_name'], $video_path);
     }
 
     // Update query
@@ -62,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         'id' => $product_id
     ]);
 
-    header("Location: mypost.php");
+    header("Location: my_post.php");
     exit;
 }
 ?>
@@ -104,14 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <input type="file" id="photo_jewelry" name="photo_jewelry">
     <p>Current Jewelry Photo:</p>
     <?php if ($product['photo_jewelry']): ?>
-        <img src="<?= htmlspecialchars($product['photo_jewelry']) ?>" alt="Jewelry Photo" width="100">
+        <img src="../uploads/jewelry/photo/<?= htmlspecialchars($product['photo_jewelry']) ?>" alt="Jewelry Photo" width="100">
     <?php endif; ?>
 
     <label for="photo_certificate">Certificate Photo:</label>
     <input type="file" id="photo_certificate" name="photo_certificate">
     <p>Current Certificate Photo:</p>
     <?php if ($product['photo_certificate']): ?>
-        <img src="<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
+        <img src="../uploads/jewelry/certificates/<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
     <?php endif; ?>
 
     <label for="video">Jewelry Video:</label>
@@ -119,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <p>Current Jewelry Video:</p>
     <?php if ($product['video']): ?>
         <video width="320" height="240" controls>
-            <source src="<?= htmlspecialchars($product['video']) ?>" type="video/mp4">
+            <source src="../uploads/jewelry/video/<?= htmlspecialchars($product['video']) ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     <?php endif; ?>

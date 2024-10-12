@@ -31,21 +31,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     // Handle photo upload
     $photo_watch = $product['photo_watch'];
     if ($_FILES['photo_watch']['name']) {
-        $photo_watch = '../uploads/watches/photo_watch/' . basename($_FILES['photo_watch']['name']);
-        move_uploaded_file($_FILES['photo_watch']['tmp_name'], $photo_watch);
+        $photo_watch = basename($_FILES['photo_watch']['name']);
+        $photo_watch_path = '../uploads/watches/photo/' . basename($_FILES['photo_watch']['name']);
+        move_uploaded_file($_FILES['photo_watch']['tmp_name'], $photo_watch_path);
     }
 
     $photo_certificate = $product['photo_certificate'];
     if ($_FILES['photo_certificate']['name']) {
-        $photo_certificate = '../uploads/watches/photo_certificate/' . basename($_FILES['photo_certificate']['name']);
-        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate);
+        $photo_certificate = basename($_FILES['photo_certificate']['name']);
+        $photo_certificate_path = '../uploads/watches/certificates/' . basename($_FILES['photo_certificate']['name']);
+        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate_path);
     }
 
     // Handle video upload
     $video = $product['video'];
     if ($_FILES['video']['name']) {
-        $video = '../uploads/watches/video/' . basename($_FILES['video']['name']);
-        move_uploaded_file($_FILES['video']['tmp_name'], $video);
+        $video = basename($_FILES['video']['name']);
+        $video_path = '../uploads/watches/video/' . basename($_FILES['video']['name']);
+        move_uploaded_file($_FILES['video']['tmp_name'], $video_path);
     }
 
     // Update query
@@ -61,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         'id' => $product_id
     ]);
 
-    header("Location: mypost.php");
+    header("Location: my_post.php");
     exit;
 }
 ?>
@@ -84,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 <?php include '../includes/header.php';?>
 <h1>Edit Watch</h1>
 
-<form action="edit_watch.php" method="POST" enctype="multipart/form-data">
+<form action="edit_watches.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
 
     <label for="title">Title:</label>
@@ -103,14 +106,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <input type="file" id="photo_watch" name="photo_watch">
     <p>Current Watch Photo:</p>
     <?php if ($product['photo_watch']): ?>
-        <img src="<?= htmlspecialchars($product['photo_watch']) ?>" alt="Watch Photo" width="100">
+        <img src="../uploads/watches/photo/<?= htmlspecialchars($product['photo_watch']) ?>" alt="Watch Photo" width="100">
     <?php endif; ?>
 
     <label for="photo_certificate">Certificate Photo:</label>
     <input type="file" id="photo_certificate" name="photo_certificate">
     <p>Current Certificate Photo:</p>
     <?php if ($product['photo_certificate']): ?>
-        <img src="<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
+        <img src="../uploads/watches/certificates/<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
     <?php endif; ?>
 
     <label for="video">Watch Video:</label>
@@ -118,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <p>Current Watch Video:</p>
     <?php if ($product['video']): ?>
         <video width="320" height="240" controls>
-            <source src="<?= htmlspecialchars($product['video']) ?>" type="video/mp4">
+            <source src="../uploads/watches/video/<?= htmlspecialchars($product['video']) ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     <?php endif; ?>

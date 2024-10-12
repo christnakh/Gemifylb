@@ -31,15 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     // Handle photo upload
     $photo_gadget = $product['photo_gadget'];
     if ($_FILES['photo_gadget']['name']) {
-        $photo_gadget = '../uploads/gadgets/photo/' . basename($_FILES['photo_gadget']['name']);
-        move_uploaded_file($_FILES['photo_gadget']['tmp_name'], $photo_gadget);
+        $photo_gadget = basename($_FILES['photo_gadget']['name']);
+        $photo_gadget_path = '../uploads/gadgets/photo/' . basename($_FILES['photo_gadget']['name']);
+        move_uploaded_file($_FILES['photo_gadget']['tmp_name'], $photo_gadget_path);
     }
 
     // Handle video upload
     $video_gadget = $product['video_gadget'];
     if ($_FILES['video_gadget']['name']) {
-        $video_gadget = '../uploads/gadgets/video/' . basename($_FILES['video_gadget']['name']);
-        move_uploaded_file($_FILES['video_gadget']['tmp_name'], $video_gadget);
+        $video_gadget = basename($_FILES['video_gadget']['name']);
+        $video_gadget_path = '../uploads/gadgets/video/' . basename($_FILES['video_gadget']['name']);
+        move_uploaded_file($_FILES['video_gadget']['tmp_name'], $video_gadget_path);
     }
 
     // Update query
@@ -53,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         'id' => $product_id
     ]);
 
-    header("Location: mypost.php");
+    header("Location: my_post.php");
     exit;
 }
 ?>
@@ -92,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <input type="file" id="photo_gadget" name="photo_gadget">
     <p>Current Gadget Photo:</p>
     <?php if ($product['photo_gadget']): ?>
-        <img src="<?= htmlspecialchars($product['photo_gadget']) ?>" alt="Gadget Photo" width="100">
+        <img src="../uploads/gadgets/photo/<?= htmlspecialchars($product['photo_gadget']) ?>" alt="Gadget Photo" width="100">
     <?php endif; ?>
 
     <label for="video_gadget">Gadget Video:</label>
@@ -100,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <p>Current Gadget Video:</p>
     <?php if ($product['video_gadget']): ?>
         <video width="320" height="240" controls>
-            <source src="<?= htmlspecialchars($product['video_gadget']) ?>" type="video/mp4">
+            <source src="../uploads/gadgets/video/<?= htmlspecialchars($product['video_gadget']) ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     <?php endif; ?>

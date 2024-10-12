@@ -203,7 +203,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="number" id="price_per_ct" name="price_per_ct" step="0.01" class="form-control rounded-pill border-0 px-4" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block rounded-pill border-0 px-4">Post Black Diamond</button>
+                             <div class="text-center">
+                                <button type="submit" class="btn btn-submit">Post</button>
+                            </div>
                         </form>
                     </div>
                 </div>

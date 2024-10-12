@@ -1,7 +1,6 @@
 <?php
 include '../config/db.php';
 
-
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php"); // Redirect to login page if not logged in
@@ -28,42 +27,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $weight = $_POST['weight'];
     $color = $_POST['color'];
     $price = $_POST['price'];
+    $cut = $_POST['cut']; // New field for cut
+    $type = $_POST['type']; // New field for type
+    $certificate = $_POST['certificate']; // New field for certificate
 
     // Handle image upload
     $photo_certificate = $product['photo_certificate'];
     if ($_FILES['photo_certificate']['name']) {
-        $photo_certificate = '../uploads/gemstone/photo_certificate/' . basename($_FILES['photo_certificate']['name']);
-        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate);
+        $photo_certificate = basename($_FILES['photo_certificate']['name']);
+        $photo_certificate_path = '../uploads/gemstones/certificates/' . basename($_FILES['photo_certificate']['name']);
+        move_uploaded_file($_FILES['photo_certificate']['tmp_name'], $photo_certificate_path);
     }
 
     $photo_gemstone = $product['photo_gemstone'];
     if ($_FILES['photo_gemstone']['name']) {
-        $photo_gemstone = '../uploads/gemstone/photo_gemstone/' . basename($_FILES['photo_gemstone']['name']);
-        move_uploaded_file($_FILES['photo_gemstone']['tmp_name'], $photo_gemstone);
+        $photo_gemstone = basename($_FILES['photo_gemstone']['name']);
+        $photo_gemstone_path = '../uploads/gemstones/photo/' . basename($_FILES['photo_gemstone']['name']);
+        move_uploaded_file($_FILES['photo_gemstone']['tmp_name'], $photo_gemstone_path);
     }
 
     // Handle video upload
     $video_gemstone = $product['video_gemstone'];
     if ($_FILES['video_gemstone']['name']) {
-        $video_gemstone = '../uploads/gemstone/video/' . basename($_FILES['video_gemstone']['name']);
-        move_uploaded_file($_FILES['video_gemstone']['tmp_name'], $video_gemstone);
+        $video_gemstone = basename($_FILES['video_gemstone']['name']);
+        $video_gemstone_path = '../uploads/gemstones/video/' . basename($_FILES['video_gemstone']['name']);
+        move_uploaded_file($_FILES['video_gemstone']['tmp_name'], $video_gemstone_path);
     }
 
     // Update query
-    $stmt = $conn->prepare("UPDATE gemstone SET gemstone_name = :gemstone_name, shape = :shape, weight = :weight, color = :color, price/ct = :price, photo_certificate = :photo_certificate, photo_gemstone = :photo_gemstone, video_gemstone = :video_gemstone WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE gemstone SET gemstone_name = :gemstone_name, shape = :shape, weight = :weight, color = :color, `price/ct` = :price, cut = :cut, type = :type, certificate = :certificate, photo_certificate = :photo_certificate, photo_gemstone = :photo_gemstone, video_gemstone = :video_gemstone WHERE id = :id");
     $stmt->execute([
         'gemstone_name' => $gemstone_name,
         'shape' => $shape,
         'weight' => $weight,
         'color' => $color,
         'price' => $price,
+        'cut' => $cut,
+        'type' => $type,
+        'certificate' => $certificate,
         'photo_certificate' => $photo_certificate,
         'photo_gemstone' => $photo_gemstone,
         'video_gemstone' => $video_gemstone,
         'id' => $product_id
     ]);
 
-    header("Location: mypost.php");
+    header("Location: my_post.php");
     exit;
 }
 ?>
@@ -74,19 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Gemstone</title>
-
-        <!-- Favicon -->
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
-        <!-- other meta tags and elements -->
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <?php include '../includes/header.php';?>
 <h1>Edit Gemstone</h1>
 
-<form action="edit_gemstone.php" method="POST" enctype="multipart/form-data">
+<form action="edit_gemstones.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
 
     <label for="gemstone_name">Gemstone Name:</label>
@@ -104,18 +108,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <label for="price">Price per Carat:</label>
     <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['price/ct']) ?>">
 
+    <label for="cut">Cut:</label> <!-- New Cut Field -->
+    <input type="text" id="cut" name="cut" value="<?= htmlspecialchars($product['cut']) ?>">
+
+    <label for="type">Type:</label> <!-- New Type Field -->
+    <input type="text" id="type" name="type" value="<?= htmlspecialchars($product['type']) ?>">
+
+    <label for="certificate">Certificate:</label> <!-- New Certificate Field -->
+    <input type="text" id="certificate" name="certificate" value="<?= htmlspecialchars($product['certificate']) ?>">
+
     <label for="photo_certificate">Certificate Photo:</label>
     <input type="file" id="photo_certificate" name="photo_certificate">
     <p>Current Certificate Photo:</p>
     <?php if ($product['photo_certificate']): ?>
-        <img src="<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
+        <img src="../uploads/gemstones/certificates/<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
     <?php endif; ?>
 
     <label for="photo_gemstone">Gemstone Photo:</label>
     <input type="file" id="photo_gemstone" name="photo_gemstone">
     <p>Current Gemstone Photo:</p>
     <?php if ($product['photo_gemstone']): ?>
-        <img src="<?= htmlspecialchars($product['photo_gemstone']) ?>" alt="Gemstone Photo" width="100">
+        <img src="../uploads/gemstones/photo/<?= htmlspecialchars($product['photo_gemstone']) ?>" alt="Gemstone Photo" width="100">
     <?php endif; ?>
 
     <label for="video_gemstone">Gemstone Video:</label>
@@ -123,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <p>Current Gemstone Video:</p>
     <?php if ($product['video_gemstone']): ?>
         <video width="320" height="240" controls>
-            <source src="<?= htmlspecialchars($product['video_gemstone']) ?>" type="video/mp4">
+            <source src="../uploads/gemstones/video/<?= htmlspecialchars($product['video_gemstone']) ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     <?php endif; ?>
@@ -131,6 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <button type="submit" name="submit">Update</button>
 </form>
 
-    <?php include '../includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
 </body>
 </html>

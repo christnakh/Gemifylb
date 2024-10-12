@@ -1,5 +1,3 @@
-
-
 <?php
 include '../config/db.php';
 
@@ -31,6 +29,10 @@ foreach ($product_queries as $category => $query) {
     $stmt->execute(['user_id' => $user_id]);
     $products[$category] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+//echo '<pre>';
+//print_r($products);
+//echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -151,7 +153,7 @@ foreach ($product_queries as $category => $query) {
 
     <?php foreach ($products as $category => $items): ?>
         <div class="product-container">
-            <h2><?= str_replace('_', ' ', $category) ?> Products</h2>
+            <h2><?= ucwords(str_replace('_', ' ', $category)) ?> Products</h2>
             <div class="row">
                 <?php if (!empty($items)): ?>
                     <?php foreach ($items as $item): ?>
@@ -161,17 +163,20 @@ foreach ($product_queries as $category => $query) {
                                     <div class="image-slider">
                                         <div class="slider-container">
                                             <?php if (!empty($item['photo_certificate'])): ?>
-                                                <img src="../uploads/<?= $category ?>/certificates/<?= htmlspecialchars($item['photo_certificate']) ?>" alt="Certificate Image">
-                                            <?php endif; ?>
+                                                
+                                                <img src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/certificates/<?= htmlspecialchars($item['photo_certificate']) ?>" alt="Certificate Image">
+                                                <?php endif; ?>
                                             <?php if (!empty($item['photo_diamond']) || !empty($item['photo_gadget']) || !empty($item['photo_gemstone']) || !empty($item['photo_jewelry']) || !empty($item['photo_watch'])): ?>
-                                                <img src="../uploads/<?= $category ?>/photo/<?= htmlspecialchars($item['photo_diamond'] ?? $item['photo_gadget'] ?? $item['photo_gemstone'] ?? $item['photo_jewelry'] ?? $item['photo_watch']) ?>" alt="Product Image">
+                                                <img src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/photo/<?= htmlspecialchars($item['photo_diamond'] ?? $item['photo_gadget'] ?? $item['photo_gemstone'] ?? $item['photo_jewelry'] ?? $item['photo_watch']) ?>" alt="Product Image">
+
                                             <?php endif; ?>
                                             <?php if (!empty($item['video_diamond']) || !empty($item['video_gadget']) || !empty($item['video_gemstone']) || !empty($item['video']) || !empty($item['video_watch'])): ?>
-                                                <video controls>
-                                                    <source src="../uploads/<?= $category ?>/video/<?= htmlspecialchars($item['video_diamond'] ?? $item['video_gadget'] ?? $item['video_gemstone'] ?? $item['video'] ?? $item['video_watch']) ?>" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            <?php endif; ?>
+    <video controls>
+        <source src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/video/<?= htmlspecialchars($item['video_diamond'] ?? $item['video_gadget'] ?? $item['video_gemstone'] ?? $item['video'] ?? $item['video_watch']) ?>" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+<?php endif; ?>
+
                                         </div>
                                     </div>
                                 </div>

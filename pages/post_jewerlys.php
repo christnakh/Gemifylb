@@ -224,8 +224,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             <input type="hidden" name="boost" value="0">
 
-                            <div class="form-group mb-4 mt-4">
-                                <button type="submit" class="btn-submit">Post Jewelry</button>
+                             <div class="text-center">
+                                <button type="submit" class="btn btn-submit">Post</button>
                             </div>
                         </form>
 

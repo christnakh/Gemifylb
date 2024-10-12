@@ -130,7 +130,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="text" id="price" name="price" class="form-control rounded-pill border-0 px-4" placeholder="Enter price" required>
                             </div>
 
-                            <button type="submit" class="btn btn-submit mt-4 rounded-pill">Submit</button>
+                             <div class="text-center">
+                                <button type="submit" class="btn btn-submit">Post</button>
+                            </div>
 
                         </form>
 

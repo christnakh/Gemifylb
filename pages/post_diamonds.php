@@ -105,6 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -341,7 +342,7 @@ function toggleOtherShapeInput(value) {
                             </div>
 
                             <div class="text-center">
-                                <button type="submit" class="btn btn-submit">Submit</button>
+                                <button type="submit" class="btn btn-submit">Post</button>
                             </div>
                         </form>
                     </div>
