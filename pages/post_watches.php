@@ -163,20 +163,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-align: center; /* Center the text */
         }
 
-        .btn-submit {
-            background-color: #bc9c48; /* Main color from your palette */
-            color: #fff; /* White text */
-            border: none; /* Remove border */
-            padding: 12px 20px; /* Padding for button */
-            border-radius: 8px; /* Slightly rounded corners */
-            font-size: 16px; /* Adjust font size */
-            cursor: pointer; /* Pointer cursor on hover */
-            text-transform: uppercase; /* Uppercase text */
-        }
-
-        .btn-submit:hover {
-            background-color: #a87f3e; /* Darker shade on hover */
-        }
     </style>
 </head>
 <body>

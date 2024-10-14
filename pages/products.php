@@ -274,7 +274,8 @@ try {
             <?php foreach ($boostedProducts as $product): ?>
                 <div class="product">
                     <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-                    <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
+                    <h6 class="text-center product_type"><?= ucwords(strtolower(htmlspecialchars($product['type']))) ?></h6>
+
                     <div class="image-slider">
                         <div class="slider-container">
                             <?php
@@ -383,7 +384,7 @@ try {
     <?php foreach ($products as $product) : ?>
         <div class="product">
             <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-            <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
+            <h6 class="text-center product_type"><?= ucwords(strtolower(htmlspecialchars($product['type']))) ?></h6>
             <div class="image-slider">
                 <div class="slider-container">
                     <?php
