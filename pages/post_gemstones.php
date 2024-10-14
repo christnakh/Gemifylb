@@ -230,7 +230,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <textarea id="comment" name="comment" class="form-control rounded-pill border-0 px-4" rows="4"></textarea><br>
                         </div>
 
-                        <button type="submit" class="btn btn-submit rounded-pill">Submit</button>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-submit">Post Gemstone</button>
+                            </div>
                     </form>
                 </div>
             </div>

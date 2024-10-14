@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 break;
                 
             case 'gemstone':
-                $query = "SELECT gemstone.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT gemstone.*, users.full_name, users.email, users.phone_number
                           FROM gemstone 
                           JOIN users ON gemstone.user_id = users.id 
                           WHERE gemstone.id = :id AND gemstone.is_approved = 'Accept'";
                 break;
 
             case 'jewelry':
-                $query = "SELECT jewelry.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT jewelry.*, users.full_name, users.email, users.phone_number, `type` AS type_p 
                           FROM jewelry 
                           JOIN users ON jewelry.user_id = users.id 
                           WHERE jewelry.id = :id AND jewelry.is_approved = 'Accept'";
@@ -147,6 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                     'weight' => $product['weight'] ?? '',
                     'cut' => $product['cut'] ?? $product['cut_type'] ?? '',
                     'shape' => $product['shape'] ?? '',
+                    'type_p' => $product['type_p'] ?? '',
                     'color' => $product['color'] ?? '',
                     'clarity' => $product['clarity'] ?? '',
                     'fluorescence_type' => $product['fluorescence_type'] ?? '',
@@ -223,6 +224,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 <?php endif; ?>
                 <?php if (!empty($productDetails['shape'])): ?>
                     <p><strong>Shape:</strong> <?php echo htmlspecialchars($productDetails['shape']); ?></p>
+                <?php endif; ?>
+                <?php if (!empty($productDetails['type_p'])): ?>
+                    <p><strong>type:</strong> <?php echo htmlspecialchars($productDetails['type_p']); ?></p>
                 <?php endif; ?>
                 <?php if (!empty($productDetails['color'])): ?>
                     <p><strong>Color:</strong> <?php echo htmlspecialchars($productDetails['color']); ?></p>

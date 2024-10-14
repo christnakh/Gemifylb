@@ -208,6 +208,12 @@ try {
     align-items: center;
 }
 
+.product_type{
+    font-weight: 500;
+    font-size: 15px;
+    color: grey;
+}
+
 
 </style>
 
@@ -268,6 +274,7 @@ try {
             <?php foreach ($boostedProducts as $product): ?>
                 <div class="product">
                     <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
+                    <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
                     <div class="image-slider">
                         <div class="slider-container">
                             <?php
@@ -376,6 +383,7 @@ try {
     <?php foreach ($products as $product) : ?>
         <div class="product">
             <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
+            <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
             <div class="image-slider">
                 <div class="slider-container">
                     <?php
