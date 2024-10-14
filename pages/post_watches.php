@@ -8,6 +8,22 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Check if user is approved
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT is_approved FROM users WHERE id = ?");
+$stmt->bindParam(1, $user_id);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user['is_approved'] != 1) {
+    // User is not approved, show a message and wait for OK before redirecting
+    echo "<script>
+            alert('You are not authorized to post. Please wait for admin approval.');
+            window.location.href = '../index.php'; // Redirect after OK is clicked
+          </script>";
+    exit();
+}
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -147,8 +163,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-align: center; /* Center the text */
         }
 
- 
-       
+        .btn-submit {
+            background-color: #bc9c48; /* Main color from your palette */
+            color: #fff; /* White text */
+            border: none; /* Remove border */
+            padding: 12px 20px; /* Padding for button */
+            border-radius: 8px; /* Slightly rounded corners */
+            font-size: 16px; /* Adjust font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            text-transform: uppercase; /* Uppercase text */
+        }
+
+        .btn-submit:hover {
+            background-color: #a87f3e; /* Darker shade on hover */
+        }
     </style>
 </head>
 <body>
@@ -210,8 +238,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="text" id="price" name="price" required>
                             </div>
 
-                             <div class="text-center">
-                                <button type="submit" class="btn btn-submit">Post</button>
+                            <div class="form-group mb-4 mt-4">
+                                <button type="submit" class="btn-submit">Post Watch</button>
                             </div>
                         </form>
 

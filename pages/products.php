@@ -50,23 +50,23 @@ $queryBoosted = "
     SELECT p.*, 
            CASE WHEN uf.product_id IS NOT NULL THEN 1 ELSE 0 END AS favorite_status
     FROM (
-        SELECT 'diamond' AS type, id, nature AS name, weight, cut_type AS cut, shape, color, photo_diamond AS photo, photo_certificate AS certificate, NULL AS price
-        FROM diamond WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'diamond' AS type, id, nature AS name, weight, cut_type AS cut, shape, color, photo_diamond AS photo, photo_certificate AS certificate, NULL AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM diamond WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
         UNION ALL
-        SELECT 'gemstone' AS type, id, gemstone_name AS name, weight, cut, shape, color, photo_gemstone AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM gemstone WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'gemstone' AS type, id, gemstone_name AS name, weight, cut, shape, color, photo_gemstone AS photo, photo_certificate AS certificate, 'price/ct' AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM gemstone WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
         UNION ALL
-        SELECT 'jewelry' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, type AS color, photo_jewelry AS photo, photo_certificate AS certificate, price AS price
-        FROM jewelry WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'jewelry' AS type, id, title AS name, NULL AS weight, Null AS cut, Null AS shape, Null AS color, photo_jewelry AS photo, photo_certificate AS certificate, price AS price, type AS type_p, description, Null AS Brand
+        FROM jewelry WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
         UNION ALL
-        SELECT 'black_diamond' AS type, id, NULL AS name, weight, NULL AS cut, shape, NULL AS color, photo_diamond AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM black_diamonds WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'black_diamond' AS type, id, NULL AS name, weight, NULL AS cut, shape, NULL AS color, photo_diamond AS photo, photo_certificate AS certificate, 'price/ct' AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM black_diamonds WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
         UNION ALL
-        SELECT 'gadget' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, NULL AS color, photo_gadget AS photo, NULL AS certificate, price AS price
-        FROM gadgets WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'gadget' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, NULL AS color, photo_gadget AS photo, NULL AS certificate, price AS price, Null AS type_p, description, Null AS Brand
+        FROM gadgets WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
         UNION ALL
-        SELECT 'watch' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, brand AS color, photo_watch AS photo, photo_certificate AS certificate, price AS price
-        FROM watches WHERE is_approved = 'Accept' AND boost = 1
+        SELECT 'watch' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, Null AS color, photo_watch AS photo, photo_certificate AS certificate, price AS price, Null AS type_p, description, Brand
+        FROM watches WHERE is_approved = 'Accept' AND boost = 1 AND is_active = 1
     ) p
     LEFT JOIN user_favorites uf ON p.id = uf.product_id AND uf.user_id = :user_id AND uf.product_type = p.type
     " . ($onlyFavorites ? "WHERE uf.product_id IS NOT NULL " : "") . "
@@ -78,23 +78,23 @@ $query = "
     SELECT p.*, 
            CASE WHEN uf.product_id IS NOT NULL THEN 1 ELSE 0 END AS favorite_status
     FROM (
-        SELECT 'diamond' AS type, id, nature AS name, weight, cut_type AS cut, shape, color, photo_diamond AS photo, photo_certificate AS certificate, NULL AS price
-        FROM diamond WHERE is_approved = 'Accept'
+        SELECT 'diamond' AS type, id, nature AS name, weight, cut_type AS cut, shape, color, photo_diamond AS photo, photo_certificate AS certificate, NULL AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM diamond WHERE is_approved = 'Accept' AND is_active = 1
         UNION ALL
-        SELECT 'gemstone' AS type, id, gemstone_name AS name, weight, cut, shape, color, photo_gemstone AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM gemstone WHERE is_approved = 'Accept'
+        SELECT 'gemstone' AS type, id, gemstone_name AS name, weight, cut, shape, color, photo_gemstone AS photo, photo_certificate AS certificate, 'price/ct' AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM gemstone WHERE is_approved = 'Accept' AND is_active = 1
         UNION ALL
-        SELECT 'jewelry' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, type AS color, photo_jewelry AS photo, photo_certificate AS certificate, price AS price
-        FROM jewelry WHERE is_approved = 'Accept'
+        SELECT 'jewelry' AS type, id, title AS name, NULL AS weight, Null AS cut, Null AS shape, Null AS color, photo_jewelry AS photo, photo_certificate AS certificate, price AS price, type AS type_p, description, Null AS Brand
+        FROM jewelry WHERE is_approved = 'Accept' AND is_active = 1
         UNION ALL
-        SELECT 'black_diamond' AS type, id, NULL AS name, weight, NULL AS cut, shape, NULL AS color, photo_diamond AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM black_diamonds WHERE is_approved = 'Accept'
+        SELECT 'black_diamond' AS type, id, NULL AS name, weight, NULL AS cut, shape, NULL AS color, photo_diamond AS photo, photo_certificate AS certificate, 'price/ct' AS price, Null AS type_p, Null AS description, Null AS Brand
+        FROM black_diamonds WHERE is_approved = 'Accept' AND is_active = 1
         UNION ALL
-        SELECT 'gadget' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, NULL AS color, photo_gadget AS photo, NULL AS certificate, price AS price
-        FROM gadgets WHERE is_approved = 'Accept'
+        SELECT 'gadget' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, NULL AS color, photo_gadget AS photo, NULL AS certificate, price AS price, Null AS type_p, description, Null AS Brand
+        FROM gadgets WHERE is_approved = 'Accept' AND is_active = 1
         UNION ALL
-        SELECT 'watch' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, brand AS color, photo_watch AS photo, photo_certificate AS certificate, price AS price
-        FROM watches WHERE is_approved = 'Accept'
+        SELECT 'watch' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, Null AS color, photo_watch AS photo, photo_certificate AS certificate, price AS price, Null AS type_p, description, Brand
+        FROM watches WHERE is_approved = 'Accept' AND is_active = 1
     ) p
     LEFT JOIN user_favorites uf ON p.id = uf.product_id AND uf.user_id = :user_id AND uf.product_type = p.type
     " . ($onlyFavorites ? "WHERE uf.product_id IS NOT NULL " : "") . "
@@ -244,7 +244,7 @@ try {
             },
             error: function(xhr, status, error) {
                 console.error('AJAX Error: ', status, error); // Debugging output
-                alert('An error occurred while processing your request.');
+                location.reload();
             }
         });
     });
@@ -256,7 +256,7 @@ try {
 <body>
     <?php include '../includes/header.php'; ?>
     
-    <div class="container mt-4 p-4">
+<div class="container mt-4 p-4">
 
     <section id="boosted-products">
     <div class="section-header">
@@ -295,20 +295,37 @@ try {
                         </div>
                     </div>
                     <?php if (!empty($product['weight'])) : ?>
-        <p><i class="fas fa-weight"></i> <?= htmlspecialchars($product['weight']) ?> carats</p>
-    <?php endif; ?>
-    <?php if (!empty($product['cut'])) : ?>
-        <p><i class="fas fa-cut"></i> <?= htmlspecialchars($product['cut']) ?></p>
-    <?php endif; ?>
-    <?php if (!empty($product['shape'])) : ?>
-        <p><i class="fas fa-shapes"></i> <?= htmlspecialchars($product['shape']) ?></p>
-    <?php endif; ?>
-    <?php if (!empty($product['color'])) : ?>
-        <p><i class="fas fa-paint-brush"></i> <?= htmlspecialchars($product['color']) ?></p>
-    <?php endif; ?>
-    <p><i class="fas fa-dollar-sign"></i> 
-        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
-    </p>
+                        <p><i class="fas fa-weight"></i> <?= htmlspecialchars($product['weight']) ?> carats</p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['cut'])) : ?>
+                        <p><i class="fas fa-cut"></i> <?= htmlspecialchars($product['cut']) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['shape'])) : ?>
+                        <p><i class="fas fa-shapes"></i> <?= htmlspecialchars($product['shape']) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['color'])) : ?>
+                        <p><i class="fas fa-paint-brush"></i> <?= htmlspecialchars($product['color']) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['Brand'])) : ?>
+                        <p><i class="fas fa-gem"></i> <?= htmlspecialchars($product['Brand']) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['type_p'])) : ?>
+                        <p><i class="fas fa-ring"></i> <?= htmlspecialchars($product['type_p']) ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($product['description'])) : ?>
+                        <p><i class="fas fa-info-circle"></i> <?= htmlspecialchars($product['description']) ?></p>
+                    <?php endif; ?>
+                    
+                    <p>
+                        <?= !empty(floatval($product['price'])) && floatval($product['price']) > 0 ? '<i class="fas fa-dollar-sign"></i> ' . number_format(floatval($product['price']), 2) : '' ?>
+                    </p>
+
                     <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
                         <?php
                         $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";
@@ -392,9 +409,11 @@ try {
                 <?php if (!empty($product['weight'])) : ?>
                     <p><i class="fas fa-weight-hanging"></i> <?= htmlspecialchars($product['weight']) ?> carats</p>
                 <?php endif; ?>
+
                 <?php if (!empty($product['cut'])) : ?>
                     <p><i class="fas fa-gem"></i> <?= htmlspecialchars($product['cut']) ?></p>
                 <?php endif; ?>
+
                 <?php if (!empty($product['shape'])) : ?>
                     <p><i class="fas fa-shapes"></i><strong></strong> <?= htmlspecialchars($product['shape']) ?></p>
                 <?php endif; ?>
@@ -402,8 +421,22 @@ try {
                 <?php if (!empty($product['color'])) : ?>
                     <p><i class="fas fa-paint-brush"></i> <?= htmlspecialchars($product['color']) ?></p>
                 <?php endif; ?>
-                <p><i class="fas fa-dollar-sign"></i> 
-                    <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
+
+                <?php if (!empty($product['Brand'])) : ?>
+                    <p><i class="fas fa-gem"></i> <?= htmlspecialchars($product['Brand']) ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($product['type_p'])) : ?>
+                    <p><i class="fas fa-ring"></i> <?= htmlspecialchars($product['type_p']) ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($product['description'])) : ?>
+                    <p><i class="fas fa-info-circle"></i> <?= htmlspecialchars($product['description']) ?></p>
+                <?php endif; ?>
+
+                <p>
+                    <?= !empty(floatval($product['price'])) && floatval($product['price']) > 0 ? '<i class="fas fa-dollar-sign"></i> 
+                    ' . number_format(floatval($product['price']), 2) : '' ?>
                 </p>
             </div>
 
@@ -435,16 +468,19 @@ try {
 
         <!-- Pagination -->
         <div class="pagination">
-            <?php if ($page > 1) : ?>
-                <a href="?page=<?= ($page - 1) ?>&sort=<?= htmlspecialchars($sort) ?>">Previous</a>
-            <?php endif; ?>
-            <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <a href="?page=<?= $i ?>&sort=<?= htmlspecialchars($sort) ?>" <?= ($i === $page) ? 'class="active"' : '' ?>><?= $i ?></a>
-            <?php endfor; ?>
-            <?php if ($page < $totalPages) : ?>
-                <a href="?page=<?= ($page + 1) ?>&sort=<?= htmlspecialchars($sort) ?>">Next</a>
-            <?php endif; ?>
-        </div>
+    <?php if ($page > 1): ?>
+        <a href="?page=<?= $page - 1 ?>&sort=<?= htmlspecialchars($sort) ?>">Previous</a>
+    <?php endif; ?>
+    
+    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+        <a href="?page=<?= $i ?>&sort=<?= htmlspecialchars($sort) ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
+    <?php endfor; ?>
+    
+    <?php if ($page < $totalPages): ?>
+        <a href="?page=<?= $page + 1 ?>&sort=<?= htmlspecialchars($sort) ?>">Next</a>
+    <?php endif; ?>
+</div>
+
     </div>
 
     <script src="../js/slider.js"></script>

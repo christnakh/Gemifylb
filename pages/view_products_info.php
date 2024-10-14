@@ -18,7 +18,17 @@ $product = null;
 // Check if POST data (type and id) is received
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POST['id'])) {
     $type = $_POST['type'];
-    $id = $_POST['id'];
+    $id = (int) $_POST['id'];
+//    echo "Type: " . htmlspecialchars($type) . "<br>";
+//echo "ID: " . htmlspecialchars($id) . "<br>";
+
+// Debugging POST data
+//if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//    echo '<pre>';
+//    print_r($_POST);
+//    echo '</pre>';
+//}
+
 
     try {
         // SQL queries for different product types
@@ -26,11 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
         switch ($type) {
             case 'diamond':
                 $query = "SELECT diamond.*, users.full_name, users.email, users.phone_number 
-                          FROM diamond 
+                          FROM diamond
                           JOIN users ON diamond.user_id = users.id 
                           WHERE diamond.id = :id AND diamond.is_approved = 'Accept'";
                 break;
-
+                
             case 'gemstone':
                 $query = "SELECT gemstone.*, users.full_name, users.email, users.phone_number 
                           FROM gemstone 
@@ -87,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 'watch' => ['certificates' => 'watches/certificates/', 'photo' => 'watches/photo/', 'video' => 'watches/video/'],
             ];
 
+
             if ($product) {
                 // Extract file paths and prepare the product details
                 $photoPath = '';
@@ -99,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                     $photoPath = !empty($product['photo_diamond']) ? $uploadDirMap['diamond']['photo'] . $product['photo_diamond'] : '';
                     $certificatePath = !empty($product['photo_certificate']) ? $uploadDirMap['diamond']['certificates'] . $product['photo_certificate'] : '';
                     $videoPath = !empty($product['video_diamond']) ? $uploadDirMap['diamond']['video'] . $product['video_diamond'] : '';
-                    $price = $product['price/ct'] ?? '';
+                    $price = '';
                 } elseif ($type == 'gemstone') {
                     $photoPath = !empty($product['photo_gemstone']) ? $uploadDirMap['gemstone']['photo'] . $product['photo_gemstone'] : '';
                     $certificatePath = !empty($product['photo_certificate']) ? $uploadDirMap['gemstone']['certificates'] . $product['photo_certificate'] : '';

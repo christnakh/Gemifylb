@@ -8,6 +8,22 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Check if user is approved
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT is_approved FROM users WHERE id = ?");
+$stmt->bindParam(1, $user_id);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user['is_approved'] != 1) {
+    // User is not approved, show a message and wait for OK before redirecting
+    echo "<script>
+            alert('You are not authorized to post. Please wait for admin approval.');
+            window.location.href = '../index.php'; // Redirect after OK is clicked
+          </script>";
+    exit();
+}
+
 
 // Function to handle file upload
 function uploadFile($fileInputName, $targetDir, $allowedTypes) {
@@ -130,9 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="text" id="price" name="price" class="form-control rounded-pill border-0 px-4" placeholder="Enter price" required>
                             </div>
 
-                             <div class="text-center">
-                                <button type="submit" class="btn btn-submit">Post</button>
-                            </div>
+                            <button type="submit" class="btn btn-submit mt-4 rounded-pill">Submit</button>
 
                         </form>
 
