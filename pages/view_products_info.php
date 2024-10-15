@@ -35,42 +35,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
         $query = "";
         switch ($type) {
             case 'diamond':
-                $query = "SELECT diamond.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT diamond.*, users.full_name, users.email, users.phone_number, users.id AS userID
                           FROM diamond
                           JOIN users ON diamond.user_id = users.id 
                           WHERE diamond.id = :id AND diamond.is_approved = 'Accept'";
                 break;
                 
             case 'gemstone':
-                $query = "SELECT gemstone.*, users.full_name, users.email, users.phone_number
+                $query = "SELECT gemstone.*, users.full_name, users.email, users.phone_number, users.id AS userID
                           FROM gemstone 
                           JOIN users ON gemstone.user_id = users.id 
                           WHERE gemstone.id = :id AND gemstone.is_approved = 'Accept'";
                 break;
 
             case 'jewelry':
-                $query = "SELECT jewelry.*, users.full_name, users.email, users.phone_number, `type` AS type_p 
+                $query = "SELECT jewelry.*, users.full_name, users.email, users.phone_number, users.id AS userID, `type` AS type_p 
                           FROM jewelry 
                           JOIN users ON jewelry.user_id = users.id 
                           WHERE jewelry.id = :id AND jewelry.is_approved = 'Accept'";
                 break;
 
             case 'black_diamond':
-                $query = "SELECT black_diamonds.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT black_diamonds.*, users.full_name, users.email, users.phone_number, users.id AS userID 
                           FROM black_diamonds 
                           JOIN users ON black_diamonds.user_id = users.id 
                           WHERE black_diamonds.id = :id AND black_diamonds.is_approved = 'Accept'";
                 break;
 
             case 'gadget':
-                $query = "SELECT gadgets.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT gadgets.*, users.full_name, users.email, users.phone_number, users.id AS userID 
                           FROM gadgets 
                           JOIN users ON gadgets.user_id = users.id 
                           WHERE gadgets.id = :id AND gadgets.is_approved = 'Accept'";
                 break;
 
             case 'watch':
-                $query = "SELECT watches.*, users.full_name, users.email, users.phone_number 
+                $query = "SELECT watches.*, users.full_name, users.email, users.phone_number, users.id AS userID 
                           FROM watches 
                           JOIN users ON watches.user_id = users.id 
                           WHERE watches.id = :id AND watches.is_approved = 'Accept'";
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                 }
 
                 $productDetails = [
-                    'ID' => $product['id'] ?? '',
+                    'ID' => $product['userID'] ?? '',
                     'title' => $product['title'] ?? $product['nature'] ?? $product['gemstone_name'] ?? '',
                     'photo' => $photoPath,
                     'certificate' => $certificatePath,
@@ -178,6 +178,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
 ?>
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -186,110 +188,462 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/global.css"> 
-    <link rel="stylesheet" href="../css/product_details.css"> 
-      <!-- Favicon -->
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
-      <!-- other meta tags and elements -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/product_details.css">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
+    <style>
+        /* Modern styling */
+        .product-details-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #ffffff;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Carousel Styles */
+        .carousel-inner img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 30px;
+            padding: 20px;
+        }
+
+        .carousel-inner video {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 30px;
+            padding: 20px;
+        }
+
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #000;
+        }
+
+        /* Product Information Styling */
+        .product-info {
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .product-info h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .product-info p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Adjust grid for 3 columns */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns layout */
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center; /* Center the grid */
+            align-items: start; /* Ensure all items align at the top */
+        }
+
+        /* Modern Icons and Side-by-Side Info */
+        .info-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            justify-content: center; /* Center content in each item */
+            text-align: center; /* Ensure text and icon are centered */
+        }
+
+        .info-item i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #0069d9;
+        }
+
+        .info-item span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Back Button Styling */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: #ffd700; /* Gold color */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 15px;
+            margin-left: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #e6c200;
+            transform: scale(1.05);
+        }
+
+        .back-button i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        /* Contact Button Styling */
+        .contact-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: #28a745; /* Green color */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .contact-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .contact-button i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        /* Responsive design adjustments */
+        @media screen and (max-width: 1024px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr; /* Stack vertically on smaller screens */
+            }
+        }
+
+        /* Styling for product description */
+        .product-description {
+            background-color: #f9f9f9; /* Light gray background for readability */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+            margin-bottom: 20px;
+            max-width: 90%; /* Ensure it's responsive and fits well on mobile */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .description-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333; /* Darker color for title */
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .description-title i {
+            margin-right: 10px;
+            color: #0069d9; /* Blue color for the icon */
+        }
+
+        .description-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555; /* Slightly muted gray for readability */
+        }
+
+        @media screen and (max-width: 768px) {
+            .product-description {
+                max-width: 100%; /* Full width on smaller screens */
+            }
+        }
+
+        form {
+            display: inline-block;
+        }
+
+
+    </style>
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
 
+    <br><br>
     <div class="container product-details-container">
+        
         <?php if (isset($productDetails) && !empty($productDetails)): ?>
-            <h1 class="text-center"><?php echo htmlspecialchars($productDetails['title']); ?></h1>
-            <div class="product-images">
-                <?php if (!empty($productDetails['photo'])): ?>
-                    <img src="../uploads/<?php echo htmlspecialchars($productDetails['photo']); ?>" alt="<?php echo htmlspecialchars($productDetails['title']); ?>" class="product-image">
-                <?php endif; ?>
-                <?php if (!empty($productDetails['certificate'])): ?>
-                    <img src="../uploads/<?php echo htmlspecialchars($productDetails['certificate']); ?>" alt="Certificate for <?php echo htmlspecialchars($productDetails['title']); ?>" class="product-image">
-                <?php endif; ?>
-            </div>
-            <div class="text-center product-info">
-                <?php if (!empty($productDetails['ID'])): ?>
-                    <p><strong>ID:</strong> <?php echo htmlspecialchars($productDetails['ID']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['certificate_type'])): ?>
-                    <p><strong>Certificate:</strong> <?php echo htmlspecialchars($productDetails['certificate_type']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['weight'])): ?>
-                    <p><strong>Weight:</strong> <?php echo htmlspecialchars($productDetails['weight']); ?> carats</p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['cut'])): ?>
-                    <p><strong>Cut:</strong> <?php echo htmlspecialchars($productDetails['cut']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['shape'])): ?>
-                    <p><strong>Shape:</strong> <?php echo htmlspecialchars($productDetails['shape']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['type_p'])): ?>
-                    <p><strong>type:</strong> <?php echo htmlspecialchars($productDetails['type_p']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['color'])): ?>
-                    <p><strong>Color:</strong> <?php echo htmlspecialchars($productDetails['color']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['clarity'])): ?>
-                    <p><strong>Clarity:</strong> <?php echo htmlspecialchars($productDetails['clarity']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['fluorescence_type'])): ?>
-                    <p><strong>Fluorescence Type:</strong> <?php echo htmlspecialchars($productDetails['fluorescence_type']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['discount_type'])): ?>
-                    <p><strong>Discount Type:</strong> <?php echo htmlspecialchars($productDetails['discount_type']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['description'])): ?>
-                    <p><strong>Description:</strong> <?php echo htmlspecialchars($productDetails['description']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['comment'])): ?>
-                    <p><strong>Comment:</strong> <?php echo htmlspecialchars($productDetails['comment']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['brand'])): ?>
-                    <p><strong>Brand:</strong> <?php echo htmlspecialchars($productDetails['brand']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['price'])): ?>
-                    <p><strong>Price:</strong> $<?php echo htmlspecialchars($productDetails['price']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['boost'])): ?>
-                    <p><strong>Boost:</strong> <?php echo htmlspecialchars($productDetails['boost']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['is_approved'])): ?>
-                    <p><strong>Approval Status:</strong> <?php echo htmlspecialchars($productDetails['is_approved']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['full_name'])): ?>
-                    <p><strong>Posted by:</strong> <?php echo htmlspecialchars($productDetails['full_name']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['email'])): ?>
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($productDetails['email']); ?></p>
-                <?php endif; ?>
-                <?php if (!empty($productDetails['phone_number'])): ?>
-                    <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($productDetails['phone_number']); ?></p>
-                <?php endif; ?>
-                <!-- Button to view all products by this user -->
-                <form action="view_user_products.php" method="POST">
-                    <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($product['user_id']); ?>">
-                    <button type="submit">View User Products</button>
-                </form>
+            <!-- Back Button -->
+            <a href="javascript:history.back();" class="back-button">
+                <span class="d-flex align-items-center"><i class="material-icons">arrow_back</i> back</span>
+            </a>
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <!-- Product Details Card -->
+                    <div class="product-card">
+                        <!-- Product Image Carousel -->
+                        <div class="carousel-container">
+                            <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <!-- Product Photo -->
+                                    <?php if (!empty($productDetails['photo'])): ?>
+                                        <div class="carousel-item active">
+                                            <img src="../uploads/<?php echo htmlspecialchars($productDetails['photo']); ?>" alt="Product Image" class="d-block w-100">
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Certificate -->
+                                    <?php if (!empty($productDetails['certificate'])): ?>
+                                        <div class="carousel-item">
+                                            <img src="../uploads/<?php echo htmlspecialchars($productDetails['certificate']); ?>" alt="Certificate Image" class="d-block w-100">
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Video -->
+                                    <?php if (!empty($productDetails['video'])): ?>
+                                        <div class="carousel-item">
+                                            <video controls class="d-block w-100">
+                                                <source src="../uploads/<?php echo htmlspecialchars($productDetails['video']); ?>" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Carousel Controls -->
+                                <!--<button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>-->
+
+                                <!-- Carousel Indicators (Dots) -->
+                                <div class="carousel-indicators">
+                                    <!-- Dynamic Indicators based on the number of items -->
+                                    <?php 
+                                    $items = 0;
+                                    $items += !empty($productDetails['photo']) ? 1 : 0;
+                                    $items += !empty($productDetails['certificate']) ? 1 : 0;
+                                    $items += !empty($productDetails['video']) ? 1 : 0;
+
+                                    // Generate the dots (indicators)
+                                    for ($i = 0; $i < $items; $i++) { 
+                                        echo '<button type="button" data-bs-target="#productImageCarousel" data-bs-slide-to="' . $i . '" class="' . ($i === 0 ? 'active' : '') . '" aria-current="' . ($i === 0 ? 'true' : 'false') . '" aria-label="Slide ' . ($i + 1) . '"></button>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
 
 
-                <br><br>
-                <?php if (!empty($productDetails['video'])): ?>
-                    <h2>Video</h2>
-                    <video controls width="400" height="250">
-                        <source src="../uploads/<?php echo htmlspecialchars($productDetails['video']); ?>" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                <?php endif; ?>
+                        <!-- Product Information -->
+                        <div class="col-lg-8 mx-auto">
+                            <div class="product-info">
+                                <div class="row justify-content-center info-grid">
+                                    
+                                    <!-- Product Title -->
+                                    <?php if (!empty($productDetails['title'])): ?>
+                                        <h1><?php echo htmlspecialchars($productDetails['title']); ?></h1>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($productDetails['full_name'])): ?>
+                                        <form action="view_user_products.php" method="POST" class="">
+                                            <!-- Add a hidden input to send the user ID -->
+                                            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($productDetails['ID']); ?>">
+                                            
+                                            <div class="info-item text-center" style="cursor: pointer;" onclick="this.closest('form').submit();">
+                                                <i class="material-icons">person</i>
+                                                <span><?php echo htmlspecialchars($productDetails['full_name']); ?></span>
+                                            </div>
+                                        </form>
+                                    <?php endif; ?>
+
+
+                                    <!-- Product Weight -->
+                                    <?php if (!empty($productDetails['weight'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">fitness_center</i>
+                                            <span> <b>Weight</b> <?php echo htmlspecialchars($productDetails['weight']); ?> ct</span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Shape -->
+                                    <?php if (!empty($productDetails['shape'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">panorama_fish_eye</i>
+                                            <span> <b>Shape</b> <?php echo htmlspecialchars($productDetails['shape']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Color -->
+                                    <?php if (!empty($productDetails['color'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">color_lens</i>
+                                            <span> <b>Color</b> <?php echo htmlspecialchars($productDetails['color']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Clarity -->
+                                    <?php if (!empty($productDetails['clarity'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">visibility</i>
+                                            <span> <b>Clarity</b> <?php echo htmlspecialchars($productDetails['clarity']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Cut -->
+                                    <?php if (!empty($productDetails['cut'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">diamond</i>
+                                            <span> <b>Cut</b> <?php echo htmlspecialchars($productDetails['cut']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Discount Type -->
+                                    <?php if (!empty($productDetails['discount_type'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">local_offer</i>
+                                            <span> <b>Discount</b> <?php echo htmlspecialchars($productDetails['discount_type']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Certificate -->
+                                    <?php if (!empty($productDetails['certificate_type'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">assignment</i>
+                                            <span> <b>Certificate</b> <?php echo htmlspecialchars($productDetails['certificate_type']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Brand -->
+                                    <?php if (!empty($productDetails['brand'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">business</i>
+                                            <span> <b>Brand</b> <?php echo htmlspecialchars($productDetails['brand']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Price -->
+                                    <?php if (!empty($productDetails['price'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">attach_money</i>
+                                            <span> <b>Price</b> <?php echo htmlspecialchars($productDetails['price']); ?> </span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Type -->
+                                    <?php if (!empty($productDetails['type_p'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">label</i>
+                                            <span> <b>Type</b> <?php echo htmlspecialchars($productDetails['type_p']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Fluorescence -->
+                                    <?php if (!empty($productDetails['fluorescence_type'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">lightbulb</i>
+                                            <span> <b>Fluorescence</b> <?php echo htmlspecialchars($productDetails['fluorescence_type']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Comment -->
+                                    <?php if (!empty($productDetails['comment'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">chat</i>
+                                            <span> <b>Comment</b> <?php echo htmlspecialchars($productDetails['comment']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Product Boost -->
+                                    <?php if (!empty($productDetails['boost'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">flash_on</i>
+                                            <span> <b>Boost</b> <?php echo htmlspecialchars($productDetails['boost']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Seller Info: Phone Number -->
+                                    <?php if (!empty($productDetails['phone_number'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">phone</i>
+                                            <span><?php echo htmlspecialchars($productDetails['phone_number']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Seller Info: Email -->
+                                    <?php if (!empty($productDetails['email'])): ?>
+                                        <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
+                                            <i class="material-icons">email</i>
+                                            <span><?php echo htmlspecialchars($productDetails['email']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <!-- Description -->
+                                    <?php if (!empty($productDetails['description'])): ?>
+                                        <div class="product-description">
+                                            <h3 class="description-title"><i class="material-icons">description</i> Description</h3>
+                                            <p class="description-text"><?php echo htmlspecialchars($productDetails['description']); ?></p>
+                                        </div>
+                                    <?php endif; ?>
+
+
+                                    <!-- Contact Button -->
+                                    <div class="col-lg-12 col-md-6 col-sm-12 text-center">
+                                        <button class="contact-button">
+                                            <i class="material-icons">mail_outline</i>
+                                            Contact Seller
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-        <?php elseif (isset($error_message)): ?>
-            <p class="text-center text-danger"><?php echo htmlspecialchars($error_message); ?></p>
+        <?php else: ?>
+            <p class="text-center">Product details are not available.</p>
         <?php endif; ?>
     </div>
-
-    <?php include '../includes/footer.php'; ?>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

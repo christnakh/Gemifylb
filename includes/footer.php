@@ -22,29 +22,15 @@
                 <div class="col-md-2 col-sm-6">
                     <h5 class="mt-3">Follow Us</h5>
                     <ul>
-                        <li><a href="" class="text-white"><i class="fab fa-twitter"></i>Twitter</a></li>
-                        <li><a href="" class="text-white"><i class="fab fa-facebook-f"></i>Facebook</a></li>
                         <li><a href="" class="text-white"><i class="fab fa-instagram"></i>Instagram</a></li>
                     </ul>
                 </div>
-                <div class="col-md-2 col-sm-6">
-                    <h5 class="mt-3">Information</h5>
-                    <ul>
-                        <li>Advanced Search</li>
-                        <li>Search Terms</li>
-                        <li>Help & FAQ's</li>
-                        <li>Store Location</li>
-                        <li>Order & Return</li>
-                    </ul>
-                </div>
+        
                 <div class="col-md-2 col-sm-6">
                     <h5 class="mt-3">Support</h5>
                     <ul>
                         <li>e-Mail Support</li>
-                        <li>Terms Of Delivery</li>
-                        <li>Refund & Return</li>
                         <li>Privacy Policy</li>
-                        <li>Chat Support</li>
                     </ul>
                 </div>
                 <div class="col-md-2 col-sm-6">
@@ -59,7 +45,6 @@
                 <div class="col-md-2 col-sm-6">
                     <h5 class="mt-3">Help</h5>
                     <ul>
-                        <li><a href="" class="text-white">Shipping</a></li>
                         <li><a href="" class="text-white">Returns</a></li>
                         <li><a href="" class="text-white">Careers</a></li>
                         <li><a href="" class="text-white">FAQ</a></li>

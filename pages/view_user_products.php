@@ -214,6 +214,7 @@ $query = "
             <?php foreach ($boostedProducts as $product): ?>
                 <div class="product">
                     <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
+                    <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
                     <div class="image-slider">
                         <div class="slider-container">
                             <?php
@@ -253,7 +254,7 @@ $query = "
                         <p><strong>Color:</strong> <?= htmlspecialchars($product['color']) ?></p>
                     <?php endif; ?>
                     <p><strong>Price:</strong> 
-                        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
+                        <?= !empty(htmlspecialchars($product['price'])) && htmlspecialchars($product['price']) > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
                     </p>
                     <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
                         <?php

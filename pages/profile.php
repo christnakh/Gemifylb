@@ -78,19 +78,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $business_certificate_filename = $user['business_certificate'];
     }
 
-    try {
-        $stmt = $conn->prepare("UPDATE users SET email = ?, full_name = ?, profile_picture = ?, passport_photo = ?, front_id_photo = ?, back_id_photo = ?, role = ?, business_certificate = ? WHERE id = ?");
-        $stmt->execute([$email, $full_name, $profile_picture_filename, $passport_photo_filename, $front_id_photo_filename, $back_id_photo_filename, $role, $business_certificate_filename, $user_id]);
 
-        echo "Profile updated successfully!";
-        header("location:profile.php");
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) { // integrity constraint violation (duplicate email)
-            echo "Email already in use!";
-        } else {
-            echo "Error: " . $e->getMessage();
-        }
+try {
+    $stmt = $conn->prepare("UPDATE users SET email = ?, full_name = ?, profile_picture = ?, passport_photo = ?, front_id_photo = ?, back_id_photo = ?, role = ?, business_certificate = ?, is_approved = 0 WHERE id = ?");
+    $stmt->execute([$email, $full_name, $profile_picture_filename, $passport_photo_filename, $front_id_photo_filename, $back_id_photo_filename, $role, $business_certificate_filename, $user_id]);
+
+    echo "<script>alert('Profile updated successfully! Your account is now unapproved, please wait for admin approval.');</script>";
+    echo "<script>window.location.href = 'profile.php';</script>";
+} catch (PDOException $e) {
+    if ($e->getCode() == 23000) { // integrity constraint violation (duplicate email)
+        echo "<script>alert('Email already in use!');</script>";
+        echo "<script>window.location.href = 'profile.php';</script>";
+    } else {
+        echo "<script>alert('Error: " . addslashes($e->getMessage()) . "');</script>";
     }
+}
+
+
 }
 ?>
 
