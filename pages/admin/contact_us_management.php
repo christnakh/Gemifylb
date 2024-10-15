@@ -2,6 +2,13 @@
 // Include database connection
 include '../../config/db.php'; // Ensure this path is correct
 
+// Check if the user is logged in and has the role 'admin'
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    // Redirect if the user is not an admin or not logged in
+    header("Location: login.php");
+    exit(); // Ensure the script stops executing after the redirect
+}
+
 // Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

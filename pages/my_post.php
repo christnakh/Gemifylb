@@ -1,3 +1,5 @@
+
+
 <?php
 include '../config/db.php';
 
@@ -153,7 +155,7 @@ foreach ($product_queries as $category => $query) {
 
     <?php foreach ($products as $category => $items): ?>
         <div class="product-container">
-            <h2><?= ucwords(str_replace('_', ' ', $category)) ?> Products</h2>
+            <h2><?= str_replace('_', ' ', $category) ?> Products</h2>
             <div class="row">
                 <?php if (!empty($items)): ?>
                     <?php foreach ($items as $item): ?>
@@ -163,23 +165,21 @@ foreach ($product_queries as $category => $query) {
                                     <div class="image-slider">
                                         <div class="slider-container">
                                             <?php if (!empty($item['photo_certificate'])): ?>
-                                                
                                                 <img src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/certificates/<?= htmlspecialchars($item['photo_certificate']) ?>" alt="Certificate Image">
-                                                <?php endif; ?>
+                                            <?php endif; ?>
                                             <?php if (!empty($item['photo_diamond']) || !empty($item['photo_gadget']) || !empty($item['photo_gemstone']) || !empty($item['photo_jewelry']) || !empty($item['photo_watch'])): ?>
                                                 <img src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/photo/<?= htmlspecialchars($item['photo_diamond'] ?? $item['photo_gadget'] ?? $item['photo_gemstone'] ?? $item['photo_jewelry'] ?? $item['photo_watch']) ?>" alt="Product Image">
-
                                             <?php endif; ?>
                                             <?php if (!empty($item['video_diamond']) || !empty($item['video_gadget']) || !empty($item['video_gemstone']) || !empty($item['video']) || !empty($item['video_watch'])): ?>
-    <video controls>
-        <source src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/video/<?= htmlspecialchars($item['video_diamond'] ?? $item['video_gadget'] ?? $item['video_gemstone'] ?? $item['video'] ?? $item['video_watch']) ?>" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-<?php endif; ?>
-
+                                                <video controls>
+                                                    <source src="../uploads/<?= ($category === 'black_diamonds' ? 'black_diamond' : ($category === 'gemstone' ? 'gemstones' : $category)) ?>/video/<?= htmlspecialchars($item['video_diamond'] ?? $item['video_gadget'] ?? $item['video_gemstone'] ?? $item['video'] ?? $item['video_watch']) ?>" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="product-details">
                                     <!-- Display product-specific details -->
                                     <?php if ($category === 'black_diamonds'): ?>
@@ -208,8 +208,28 @@ foreach ($product_queries as $category => $query) {
                                         <p><strong>Description:</strong> <?= htmlspecialchars($item['description']) ?></p>
                                         <p><strong>Price:</strong> $<?= htmlspecialchars($item['price']) ?></p>
                                     <?php endif; ?>
+                                    
+                                    <!-- Add approval and boost status -->
+                                    <p><strong>Status:</strong> 
+                                        <?php
+                                        // Display approval status based on the `is_approved` value
+                                        switch ($item['is_approved']) {
+                                            case 'Accept':
+                                                echo 'Approved';
+                                                break;
+                                            case 'Decline':
+                                                echo 'Declined';
+                                                break;
+                                            default:
+                                                echo 'Pending';
+                                                break;
+                                        }
+                                        ?>
+                                    </p>
+                                    
+                                    <p><strong>Boosted:</strong> <?= $item['boost'] ? 'Yes' : 'No' ?></p>
                                 </div>
-                                
+
                                 <div class="product-actions">
                                     <form action="edit_<?= $category ?>.php" method="POST" class="action-form">
                                         <input type="hidden" name="product_id" value="<?= htmlspecialchars($item['id']) ?>">
@@ -223,14 +243,13 @@ foreach ($product_queries as $category => $query) {
                                     </form>
 
                                     <form action="toggle_status.php" method="post" class="action-form">
-                                    <input type="hidden" name="id" value="<?= htmlspecialchars($item['id']) ?>">
-                                    <input type="hidden" name="type" value="<?= htmlspecialchars($category) ?>">
-                                    <input type="hidden" name="is_active" value="<?= htmlspecialchars($item['is_active']) ?>">
-                                    <button type="submit" class="btn btn-warning btn-sm">
-                                        <?= $item['is_active'] ? 'Deactivate' : 'Activate' ?>
-                                    </button>
-                                </form>
-
+                                        <input type="hidden" name="id" value="<?= htmlspecialchars($item['id']) ?>">
+                                        <input type="hidden" name="type" value="<?= htmlspecialchars($category) ?>">
+                                        <input type="hidden" name="is_active" value="<?= htmlspecialchars($item['is_active']) ?>">
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            <?= $item['is_active'] ? 'Deactivate' : 'Activate' ?>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -242,6 +261,7 @@ foreach ($product_queries as $category => $query) {
         </div>
     <?php endforeach; ?>
 </div>
+
 <?php include '../includes/footer.php'; ?>
 </body>
 </html>

@@ -126,8 +126,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("INSERT INTO users (email, phone_number, full_name, username, password, profile_picture, passport_photo, role, business_certificate, front_id_photo, back_id_photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$email, $country_code . $phone_number, $full_name, $username, $password, $profile_picture_filename, $passport_photo_filename, $role, $business_document_filename, $front_id_photo_filename, $back_id_photo_filename]);
 
-            // Redirect to login page after successful signup
-            header("Location: login.php");
+              echo "<script type='text/javascript'>
+            alert('Signup successful! Please log in.');
+            window.location.href = 'login.php';
+                </script>";
             exit();
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) { // integrity constraint violation (duplicate email)

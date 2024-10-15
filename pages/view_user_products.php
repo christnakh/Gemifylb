@@ -44,22 +44,22 @@ $queryBoosted = "
            CASE WHEN uf.product_id IS NOT NULL THEN 1 ELSE 0 END AS favorite_status
     FROM (
         SELECT 'diamond' AS type, id, nature AS name, weight, cut_type AS cut, shape, color, photo_diamond AS photo, photo_certificate AS certificate, NULL AS price
-        FROM diamond WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM diamond WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
         UNION ALL
         SELECT 'gemstone' AS type, id, gemstone_name AS name, weight, cut, shape, color, photo_gemstone AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM gemstone WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM gemstone WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
         UNION ALL
         SELECT 'jewelry' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, type AS color, photo_jewelry AS photo, photo_certificate AS certificate, price AS price
-        FROM jewelry WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM jewelry WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
         UNION ALL
         SELECT 'black_diamond' AS type, id, NULL AS name, weight, NULL AS cut, shape, NULL AS color, photo_diamond AS photo, photo_certificate AS certificate, 'price/ct' AS price
-        FROM black_diamonds WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM black_diamonds WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
         UNION ALL
         SELECT 'gadget' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, NULL AS color, photo_gadget AS photo, NULL AS certificate, price AS price
-        FROM gadgets WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM gadgets WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
         UNION ALL
         SELECT 'watch' AS type, id, title AS name, NULL AS weight, NULL AS cut, NULL AS shape, brand AS color, photo_watch AS photo, photo_certificate AS certificate, price AS price
-        FROM watches WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id
+        FROM watches WHERE is_approved = 'Accept' AND boost = 1 AND user_id = :user_id AND is_active = 1
     ) p
     LEFT JOIN user_favorites uf ON p.id = uf.product_id AND uf.user_id = :current_user_id AND uf.product_type = p.type
     " . ($onlyFavorites ? "WHERE uf.product_id IS NOT NULL " : "") . "
@@ -343,8 +343,7 @@ $query = "
                         <p><strong>Color:</strong> <?= htmlspecialchars($product['color']) ?></p>
                     <?php endif; ?>
                     <p><strong>Price:</strong> 
-                        <?= !empty($product['price']) && $product['price'] > 0 ? '$' . number_format($product['price'], 2) : 'Unavailable' ?>
-                    </p>
+                        <?= !empty(floatval($product['price'])) && floatval($product['price']) > 0 ? '<i class="fas fa-dollar-sign"></i> ' . number_format(floatval($product['price']), 2) : '' ?>                    </p>
                     <button class="favorite-btn btn btn-primary" data-id="<?= htmlspecialchars($product['id']) ?>" data-type="<?= htmlspecialchars($product['type']) ?>">
     <?php
     $queryFavorite = "SELECT COUNT(*) FROM user_favorites WHERE user_id = :user_id AND product_id = :product_id AND product_type = :product_type";

@@ -29,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         exit();
     } else {
-        echo "Invalid email or password!";
+        header("Location: login.php?error=1");
+        exit();
     }
 }
 ?>
@@ -49,7 +50,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
-
+<script>
+        window.onload = function() {
+            // Check if there is an error parameter in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('error')) {
+                // Display an alert if error is present
+                alert('Invalid email or password!');
+            }
+        };
+    </script>
 </head>
 
 <body>

@@ -1,6 +1,14 @@
 <?php
 // Include your database connection or necessary files here
-include 'db.php';
+include '../../config/db.php';
+
+// Check if the user is logged in and has the role 'admin'
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    // Redirect if the user is not an admin or not logged in
+    header("Location: login.php");
+    exit(); // Ensure the script stops executing after the redirect
+}
+
 
 // Define file paths
 $pearPath = '../../uploads/rapaport/pear.pdf';
@@ -10,9 +18,13 @@ $roundPath = '../../uploads/rapaport/round.pdf';
 $message = '';
 $message_type = '';
 
-// Check if the form is submitted
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+
+    // Variable to store messages
+    $messages = [];
+
     // Handling pear.pdf upload
     if (isset($_FILES['pear_file']) && $_FILES['pear_file']['name'] !== '') {
         // Check if the previous pear.pdf exists and remove it
@@ -21,11 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Save the new pear.pdf file
         if (move_uploaded_file($_FILES['pear_file']['tmp_name'], $pearPath)) {
-            $message = 'Pear.pdf has been uploaded successfully.';
-            $message_type = 'success'; // Bootstrap success alert
+            $messages[] = 'Pear.pdf has been uploaded successfully.';
         } else {
-            $message = 'Error uploading Pear.pdf.';
-            $message_type = 'danger'; // Bootstrap danger alert
+            $messages[] = 'Error uploading Pear.pdf.';
         }
     }
 
@@ -37,17 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Save the new round.php file
         if (move_uploaded_file($_FILES['round_file']['tmp_name'], $roundPath)) {
-            $message = 'Round.php has been uploaded successfully.';
-            $message_type = 'success'; // Bootstrap success alert
+            $messages[] = 'Round.php has been uploaded successfully.';
         } else {
-            $message = 'Error uploading Round.php.';
-            $message_type = 'danger'; // Bootstrap danger alert
+            $messages[] = 'Error uploading Round.php.';
         }
     }
-    header("location:rapaport_management.php");
+
+    // Redirect and display messages in JS alert
+    header("location: rapaport_management.php?messages=" . urlencode(json_encode($messages)));
     exit();
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -179,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="file" name="pear_file" id="pear_file" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="round_file">Upload Round PHP:</label>
+                        <label for="round_file">Upload Round PDF:</label>
                         <input type="file" name="round_file" id="round_file" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary">Upload Files</button>
@@ -187,10 +199,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </main>
         </div>
     </div>
-
+    <script>
+        window.onload = function() {
+            // Check if there are messages in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const messages = urlParams.get('messages');
+            
+            if (messages) {
+                // Decode the messages and display them as alerts
+                const decodedMessages = JSON.parse(decodeURIComponent(messages));
+                decodedMessages.forEach(message => {
+                    alert(message);  // Show alert for each message
+                });
+            }
+        };
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-r
