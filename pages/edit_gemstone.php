@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 
     // Update query
-    $stmt = $conn->prepare("UPDATE gemstone SET gemstone_name = :gemstone_name, shape = :shape, weight = :weight, color = :color, `price/ct` = :price, cut = :cut, type = :type, certificate = :certificate, photo_certificate = :photo_certificate, photo_gemstone = :photo_gemstone, video_gemstone = :video_gemstone WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE gemstone SET gemstone_name = :gemstone_name, shape = :shape, weight = :weight, color = :color, `price/ct` = :price, cut = :cut, type = :type, certificate = :certificate, photo_certificate = :photo_certificate, photo_gemstone = :photo_gemstone, video_gemstone = :video_gemstone, is_approved = 'Pending' WHERE id = :id");
     $stmt->execute([
         'gemstone_name' => $gemstone_name,
         'shape' => $shape,

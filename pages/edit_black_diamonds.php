@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 
     // Update query
-    $stmt = $conn->prepare("UPDATE black_diamonds SET name = :name, shape = :shape, weight = :weight, `price/ct` = :price, photo_certificate = :photo_certificate, photo_diamond = :photo_diamond, video_diamond = :video_diamond WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE black_diamonds SET name = :name, shape = :shape, weight = :weight, `price/ct` = :price, photo_certificate = :photo_certificate, photo_diamond = :photo_diamond, video_diamond = :video_diamond, is_approved = 'Pending' WHERE id = :id");
     $stmt->execute([
         'name' => $name,
         'shape' => $shape,

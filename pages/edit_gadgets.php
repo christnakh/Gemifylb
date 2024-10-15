@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 
     // Update query
-    $stmt = $conn->prepare("UPDATE gadgets SET title = :title, description = :description, price = :price, photo_gadget = :photo_gadget, video_gadget = :video_gadget WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE gadgets SET title = :title, description = :description, price = :price, photo_gadget = :photo_gadget, video_gadget = :video_gadget, is_approved = 'Pending' WHERE id = :id");
     $stmt->execute([
         'title' => $title,
         'description' => $description,
