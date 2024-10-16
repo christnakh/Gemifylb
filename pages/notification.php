@@ -10,6 +10,27 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];  // Get logged-in user's ID
 
+// Handle notification deletion
+if (isset($_POST['delete_notification']) && !empty($_POST['notification_id'])) {
+    $notification_id = intval($_POST['notification_id']); // Ensure it's an integer
+
+    // Prepare the delete query
+    $deleteQuery = "DELETE FROM notifications WHERE id = :id AND Receiver = :receiver";
+    $deleteStmt = $conn->prepare($deleteQuery);
+    $deleteStmt->bindParam(':id', $notification_id, PDO::PARAM_INT);
+    $deleteStmt->bindParam(':receiver', $user_id, PDO::PARAM_INT);
+
+    // Execute the delete query
+    $deleteStmt->execute();
+    // Optionally add a success message (you could display this on the page)
+    $success_message = "Notification deleted successfully.";
+    ?>
+        <script>
+            alert("Notification deleted successfully.");
+        </script>
+    <?php
+}
+
 // Fetch notifications for the logged-in user and join with relevant product tables to get the product name
 $query = "
     SELECT notifications.*, 
@@ -40,13 +61,6 @@ $updateStmt->execute();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications</title>
     <link rel="stylesheet" href="styles.css"> <!-- Your custom CSS file -->
-        <link rel="stylesheet" type="text/css" href="../css/global.css">
-      <!-- Favicon -->
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
-      <!-- other meta tags and elements -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Android -->
-    <meta name="mobile-web-app-capable" content="yes">j
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -119,6 +133,7 @@ $updateStmt->execute();
 <?php include '../includes/header.php'; ?>
 
 <div class="container">
+    
     <?php if ($stmt->rowCount() > 0): ?>
         <!-- Loop through notifications -->
         <?php while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
@@ -140,11 +155,13 @@ $updateStmt->execute();
                     ?>
                 </div>
 
-
                 <!-- Date and Delete Button -->
                 <div class="notification-info">
                     <span class="notification-time"><?php echo date('M d, Y h:i A', strtotime($notification['created_at'])); ?></span>
-                    <button class="delete-notification" data-id="<?php echo $notification['id']; ?>">&#10006;</button>
+                    <form method="post" style="display: inline;">
+                        <input type="hidden" name="notification_id" value="<?php echo $notification['id']; ?>">
+                        <button type="submit" name="delete_notification" class="delete-notification">&#10006;</button>
+                    </form>
                 </div>
             </div>
         <?php endwhile; ?>
@@ -154,28 +171,6 @@ $updateStmt->execute();
 </div>
 
 <?php include '../includes/footer.php'; ?>
-
-<script>
-    // Delete notification functionality
-    document.querySelectorAll('.delete-notification').forEach(function(button) {
-        button.addEventListener('click', function() {
-            let notificationId = this.getAttribute('data-id');
-
-            fetch('delete_notification.php', {
-                method: 'POST',
-                body: JSON.stringify({ id: notificationId }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    // Remove the notification from UI
-                    this.parentElement.parentElement.remove();
-                }
-            });
-        });
-    });
-</script>
 
 </body>
 </html>

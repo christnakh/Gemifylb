@@ -227,6 +227,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- Back Button -->
+                <a href="dashboard.php" class="btn btn-secondary mt-3">Back</a>
             </main>
         </div>
     </div>
