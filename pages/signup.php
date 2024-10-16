@@ -49,19 +49,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!is_dir($front_id_photo_dir)) mkdir($front_id_photo_dir, 0755, true);
     if (!is_dir($back_id_photo_dir)) mkdir($back_id_photo_dir, 0755, true);
 
-    // Validate and process profile picture upload
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-        $profile_picture_extension = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
-        if (in_array($profile_picture_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $profile_picture_filename = uniqid() . '-' . basename($_FILES['profile_picture']['name']);
-            $profile_picture_filepath = $profile_picture_dir . $profile_picture_filename;
-            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture_filepath);
-        } else {
-            $error = "Invalid file type for profile picture.";
-        }
+
+    // Define the extensions you don't want to allow
+$disallowed_extensions = ['exe', 'bat', 'sh', 'php', 'js', 'html'];
+
+// Validate and process profile picture upload
+if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+    $profile_picture_extension = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
+    
+    // Check if the file extension is in the disallowed list
+    if (!in_array($profile_picture_extension, $disallowed_extensions)) {
+        $profile_picture_filename = uniqid() . '-' . basename($_FILES['profile_picture']['name']);
+        $profile_picture_filepath = $profile_picture_dir . $profile_picture_filename;
+        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture_filepath);
     } else {
-        $profile_picture_filename = null;
+        $error = "Invalid file type for profile picture.";
     }
+} else {
+    $profile_picture_filename = null;
+}
 
     // Validate and process personal ID photo upload
     if (isset($_FILES['passport_photo']) && $_FILES['passport_photo']['error'] == 0) {
