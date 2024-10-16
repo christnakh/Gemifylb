@@ -1,13 +1,6 @@
 <?php
 include('../../config/db.php');
 
-// Check if the user is logged in and has the role 'admin'
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    // Redirect if the user is not an admin or not logged in
-    header("Location: login.php");
-    exit(); // Ensure the script stops executing after the redirect
-}
-
 // Handle search query
 $searchQuery = "";
 if (isset($_POST['search'])) {
@@ -64,7 +57,10 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>User Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
     <style>
+        
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -112,6 +108,18 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             border: 1px solid #dee2e6; /* Optional border */
             border-radius: 0.25rem; /* Rounded corners */
         }
+
+        .backbuttonContainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1887FF !important;
+        }
+
+        .backbuttonContainer i{
+            width: 30px;
+        }
+        
     </style>
 </head>
 <body>
@@ -160,6 +168,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Main Content -->
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <header class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <a class="navbar-brand backbuttonContainer" href="javascript:history.back();">
+                        <i class="material-icons" style="vertical-align: middle;">arrow_backward</i> Back
+                    </a>
                     <h1 class="h2">Manage Users</h1>
                 </header>
 
@@ -216,7 +227,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- Back Button -->
-                <a href="dashboard.php" class="btn btn-secondary mt-3">Back</a>
             </main>
         </div>
     </div>

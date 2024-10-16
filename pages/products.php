@@ -175,8 +175,8 @@ try {
     <style>
     /* Reset some basic elements */
     .product{
-    background-color: white !important;
-}
+        background-color: white !important;
+    }
 
 .section-header {
     display: flex;
@@ -213,6 +213,44 @@ try {
     font-size: 15px;
     color: grey;
 }
+
+button.favorite-btn, 
+button.btn-submit {
+    width: 200px; /* Set button width to 200px */
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 5px;
+    display: block; /* Ensure the button is treated as a block-level element */
+    margin: 10px auto; /* Center the button horizontally */
+}
+
+button.favorite-btn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+}
+
+button.favorite-btn:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+}
+
+button.btn-submit {
+    background-color: #28a745; /* Bootstrap success color */
+    color: white;
+    border: none;
+}
+
+button.btn-submit:hover {
+    background-color: #218838; /* Darker shade for hover */
+}
+
+.product .image-slider img {
+    width: 100%;
+    height: 230px; /* or any preferred fixed height */
+    object-fit: cover;
+}
+
 
 
 </style>
@@ -274,8 +312,7 @@ try {
             <?php foreach ($boostedProducts as $product): ?>
                 <div class="product">
                     <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-                    <h6 class="text-center product_type"><?= ucwords(strtolower(htmlspecialchars($product['type']))) ?></h6>
-
+                    <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
                     <div class="image-slider">
                         <div class="slider-container">
                             <?php
@@ -384,7 +421,7 @@ try {
     <?php foreach ($products as $product) : ?>
         <div class="product">
             <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-            <h6 class="text-center product_type"><?= ucwords(strtolower(htmlspecialchars($product['type']))) ?></h6>
+            <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
             <div class="image-slider">
                 <div class="slider-container">
                     <?php

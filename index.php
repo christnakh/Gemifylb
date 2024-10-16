@@ -80,6 +80,11 @@ $isLoggedIn = isset($_SESSION['user_id']);
                         <li class="nav-item">
                             <a class="nav-link text-white" href="pages/products.php">Products</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="../pages/notification.php" title="Notifications">
+                                <i class="fas fa-bell"></i> <!-- Notification bell icon -->
+                            </a>
+                        </li>
                                       <li class="nav-item">
                             <a class="nav-link text-white" href="pages/favorites.php">
                                 <i class="fas fa-heart"></i> <!-- Solid heart icon (bold) -->

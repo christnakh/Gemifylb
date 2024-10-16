@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../config/db.php';
 
 // Check if the user is already logged in
@@ -126,10 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("INSERT INTO users (email, phone_number, full_name, username, password, profile_picture, passport_photo, role, business_certificate, front_id_photo, back_id_photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$email, $country_code . $phone_number, $full_name, $username, $password, $profile_picture_filename, $passport_photo_filename, $role, $business_document_filename, $front_id_photo_filename, $back_id_photo_filename]);
 
-              echo "<script type='text/javascript'>
-            alert('Signup successful! Please log in.');
-            window.location.href = 'login.php';
-                </script>";
+            // Redirect to login page after successful signup
+            header("Location: login.php");
             exit();
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) { // integrity constraint violation (duplicate email)
@@ -152,13 +149,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
       <!-- Favicon -->
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
       <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
+
+    <style>
+        .imagecontainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo-img{
+            margin-left: 30%;
+        }
+    </style>
 </head>
 
 <body>
@@ -167,9 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container form-content mt-4">
         <form method="POST" action="" enctype="multipart/form-data" onsubmit="return validatePassword();">
             <div class="row justify-content-center align-items-center signup-form-container">
-                <div class="col-md-6 text-center">
+                <div class="col-md-6 imagecontainer">
                     <img src="../images/logo.png" alt="Logo" class="logo-img">
                 </div>
+
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
