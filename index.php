@@ -344,8 +344,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
           Jewelry!
         </p>
         <div class="btns">
-          <button>Choose a Plan</button>
-          <button>Get a Demo</button>
+          <button>Register</button>
+          <button>Login</button>
         </div>
       </div>
     </div>

@@ -155,7 +155,7 @@ foreach ($product_queries as $category => $query) {
 
     <?php foreach ($products as $category => $items): ?>
         <div class="product-container">
-            <h2><?= str_replace('_', ' ', $category) ?> Products</h2>
+            <h2><?= ucwords(str_replace('_', ' ', $category)) ?> Products</h2>
             <div class="row">
                 <?php if (!empty($items)): ?>
                     <?php foreach ($items as $item): ?>

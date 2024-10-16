@@ -2,11 +2,20 @@
 // Database connection
 include '../../config/db.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 // Check if the user is logged in and has the role 'admin'
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     // Redirect if the user is not an admin or not logged in
     header("Location: login.php");
     exit(); // Ensure the script stops executing after the redirect
+}
+
+$allowed_tables = ['diamond', 'gemstone', 'gadgets', 'jewelry', 'watches', 'black_diamonds'];
+if (!in_array($table, $allowed_tables)) {
+    die("Invalid table name.");
 }
 
 
@@ -26,7 +35,7 @@ function fetchPostsByStatus($conn, $status) {
             (SELECT id, "jewelry" AS type, title AS name, photo_jewelry AS photo1, NULL AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
             FROM jewelry WHERE is_approved = :status)
             UNION ALL
-            (SELECT id, "watch" AS type, title AS name, photo_watch AS photo1, NULL AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
+            (SELECT id, "watches" AS type, title AS name, photo_watch AS photo1, NULL AS video, NULL AS weight, NULL AS clarity, NULL AS color, user_id, is_approved
             FROM watches WHERE is_approved = :status)
             UNION ALL
             (SELECT id, "black_diamond" AS type, name AS name, photo_diamond AS photo1, video_diamond AS video, weight, NULL AS clarity, NULL AS color, user_id, is_approved
@@ -69,16 +78,20 @@ function fetchBoostedPosts($conn) {
     }
 }
 
-// Handle post approval, decline, boosting, and unboosting
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['action']) && isset($_POST['post_id'])) {
+    if (isset($_POST['action']) && isset($_POST['post_id']) && isset($_POST['post_type'])) {
         $action = $_POST['action'];
         $post_id = $_POST['post_id'];
+        $table = $_POST['post_type']; // This line should be here to assign a value to $table
+
+        if (!in_array($table, $allowed_tables)) {
+            die("Invalid table name.");
+        }
 
         try {
             if ($action === 'approve') {
-                $table = $_POST['post_type'];
-                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'Accept' WHERE id = :id");
+                $query = "UPDATE $table SET is_approved = 'Accept' WHERE id = :id";
+                $stmt = $conn->prepare($query);
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
 
@@ -89,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 insertNotification($conn, $sender_id, $receiver_id, $message);
 
             } elseif ($action === 'decline') {
-                $table = $_POST['post_type'];
-                $stmt = $conn->prepare("UPDATE $table SET is_approved = 'Decline' WHERE id = :id");
+                $query = "UPDATE $table SET is_approved = 'Decline' WHERE id = :id";
+                $stmt = $conn->prepare($query);
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
 
@@ -102,8 +115,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             } elseif ($action === 'boost') {
                 // Logic to boost the post
-                $table = $_POST['post_type'];
-                $stmt = $conn->prepare("UPDATE $table SET boost = 1 WHERE id = :id");
+                $query = "UPDATE $table SET boost = 1 WHERE id = :id";
+                $stmt = $conn->prepare($query);
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
 
@@ -114,8 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 insertNotification($conn, $sender_id, $receiver_id, $message);
             } elseif ($action === 'unboost') {
                 // Logic to unboost the post
-                $table = $_POST['post_type'];
-                $stmt = $conn->prepare("UPDATE $table SET boost = 0 WHERE id = :id");
+                $query = "UPDATE $table SET boost = 0 WHERE id = :id";
+                $stmt = $conn->prepare($query);
                 $stmt->bindParam(':id', $post_id);
                 $stmt->execute();
             }
@@ -127,6 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+
 
 // Function to fetch user_id of post owner
 function fetchPostUserId($conn, $post_id) {
@@ -170,65 +185,113 @@ $boostedPosts = fetchBoostedPosts($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Management</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            display: flex;
+    font-family: Arial, sans-serif;
         }
+
         .sidebar {
-            width: 200px;
-            background-color: #f8f9fa;
-            padding: 15px;
             position: fixed;
-            height: 100%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
         }
-        .sidebar a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
+
+        .sidebar-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
-        .sidebar a:hover {
-            background-color: #007bff;
-            color: white;
+
+        .nav-link.active {
+            color: #007bff;
         }
-        .main-content {
-            margin-left: 220px;
-            padding: 20px;
-            width: 100%;
+
+        .nav-link {
+            font-size: 1.1rem;
+            padding: 15px;
         }
-        .post-card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
+
+        .nav-link i {
+            margin-right: 10px;
+        }
+
+        .header {
             margin-bottom: 20px;
-            text-align: center;
         }
-        .post-image {
+
+        .container .row .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            padding: 20px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
             width: 100%;
-            height: auto;
-            max-height: 200px;
-            object-fit: cover;
-            margin-bottom: 15px;
+            background-color: #f8f9fa;
         }
-        .post-buttons {
-            margin-top: 10px;
-        }
+
     </style>
 </head>
 <body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <h4 class="text-center my-4">Admin Panel</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="user_management.php">
+                                <i class="fas fa-users"></i> User Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="post_management.php">
+                                <i class="fas fa-newspaper"></i> Post Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="rapaport_management.php">
+                                <i class="fas fa-file-alt"></i> Rapaport Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact_us_management.php">
+                                <i class="fas fa-envelope"></i> Contact Us Management
+                            </a>
+                        </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="../logout.php">
+                                <i class="fas fa-envelope"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-    <!-- Left-side Navbar -->
-    <div class="sidebar">
-        <h3>Manage Posts</h3>
-        <a href="#">Home</a>
-        <a href="#">Posts</a>
-        <a href="#">Users</a>
-        <a href="#">Settings</a>
-    </div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <header class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </header>
 
-    <!-- Main Content Area -->
-    <div class="main-content">
         <div class="container">
             <!-- Top Navbar with Boosted, Pending, Accepted, Declined -->
             <div class="d-flex justify-content-between mb-4">
@@ -327,6 +390,7 @@ $boostedPosts = fetchBoostedPosts($conn);
             </div>
         </div>
     </div>
+    </div>
 
     <!-- Toggle Sections Script -->
     <script>
@@ -348,5 +412,8 @@ $boostedPosts = fetchBoostedPosts($conn);
         }
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -84,74 +84,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 <?php include '../includes/header.php';?>
-<h1>Edit Black Diamond</h1>
+<div class="container mt-4 p-3">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <h2 class="h3 font-weight-normal">Edit Black Diamond</h2>
+                    </div>
+                    <form action="edit_black_diamonds.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id'] ?? '') ?>">
 
-<!-- Debugging output -->
-<!--<h2>Debugging Output</h2>
-<p>Product ID: <?= htmlspecialchars($product_id) ?></p>
-<p>Name: <?= htmlspecialchars($product['name'] ?? 'N/A') ?></p>
-<p>Shape: <?= htmlspecialchars($product['shape'] ?? 'N/A') ?></p>
-<p>Weight: <?= htmlspecialchars($product['weight'] ?? 'N/A') ?></p>
-<p>Price: <?= htmlspecialchars($product['price/ct'] ?? 'N/A') ?></p>
-<p>Certificate Photo: <?= htmlspecialchars($product['photo_certificate'] ?? 'N/A') ?></p>
-<p>Diamond Photo: <?= htmlspecialchars($product['photo_diamond'] ?? 'N/A') ?></p>
-<p>Diamond Video: <?= htmlspecialchars($product['video_diamond'] ?? 'N/A') ?></p>-->
+                        <div class="form-group mb-3">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" value="<?= htmlspecialchars($product['name'] ?? '') ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
 
-<form action="edit_black_diamonds.php" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id'] ?? '') ?>">
+                        <div class="form-group mb-3">
+                            <label for="shape">Shape:</label>
+                            <input type="text" id="shape" name="shape" value="<?= htmlspecialchars($product['shape'] ?? '') ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
 
-    <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<?= htmlspecialchars($product['name'] ?? '') ?>" required>
+                        <div class="form-group mb-3">
+                            <label for="weight">Weight (in carats):</label>
+                            <input type="text" id="weight" name="weight" value="<?= htmlspecialchars($product['weight'] ?? '') ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="price">Price per Carat:</label>
+                            <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['price/ct'] ?? '') ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="photo_certificate">Certificate Photo:</label>
+                            <div class="custom-file">
+                                <input type="file" id="photo_certificate" name="photo_certificate" class="custom-file-input">
+                                <label class="custom-file-label form-control rounded-pill border-0 px-4" for="photo_certificate">Choose file</label>
+                            </div>
+                            <p class="mt-2">Current Certificate Photo:</p>
+                            <?php if ($product['photo_certificate']): ?>
+                                <img src="../uploads/black_diamond/certificates/<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="photo_diamond">Diamond Photo:</label>
+                            <div class="custom-file">
+                                <input type="file" id="photo_diamond" name="photo_diamond" class="custom-file-input">
+                                <label class="custom-file-label form-control rounded-pill border-0 px-4" for="photo_diamond">Choose file</label>
+                            </div>
+                            <p class="mt-2">Current Diamond Photo:</p>
+                            <?php if ($product['photo_diamond']): ?>
+                                <img src="../uploads/black_diamond/photo/<?= htmlspecialchars($product['photo_diamond']) ?>" alt="Diamond Photo" width="100">
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="video_diamond">Diamond Video:</label>
+                            <div class="custom-file">
+                                <input type="file" id="video_diamond" name="video_diamond" class="custom-file-input">
+                                <label class="custom-file-label form-control rounded-pill border-0 px-4" for="video_diamond">Choose file</label>
+                            </div>
+                            <p class="mt-2">Current Diamond Video:</p>
+                            <?php if ($product['video_diamond']): ?>
+                                <video src="../uploads/black_diamond/video/<?= htmlspecialchars($product['video_diamond']) ?>" width="200" controls></video>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" name="submit" class="btn btn-submit rounded-pill px-4">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div>
-        <label for="shape">Shape:</label>
-        <input type="text" id="shape" name="shape" value="<?= htmlspecialchars($product['shape'] ?? '') ?>" required>
-    </div>
-
-    <div>
-        <label for="weight">Weight:</label>
-        <input type="text" id="weight" name="weight" value="<?= htmlspecialchars($product['weight'] ?? '') ?>" required>
-    </div>
-
-    <div>
-        <label for="price">Price per Carat:</label>
-        <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['price/ct'] ?? '') ?>" required>
-    </div>
-
-    <div>
-        <label for="photo_certificate">Certificate Photo:</label>
-        <input type="file" id="photo_certificate" name="photo_certificate">
-        <p>Current Certificate Photo:</p>
-        <?php if ($product['photo_certificate']): ?>
-            <img src="../uploads/black_diamond/certificates/<?= htmlspecialchars($product['photo_certificate']) ?>" alt="Certificate Photo" width="100">
-        <?php endif; ?>
-    </div>
-
-    <div>
-        <label for="photo_diamond">Diamond Photo:</label>
-        <input type="file" id="photo_diamond" name="photo_diamond">
-        <p>Current Diamond Photo:</p>
-        <?php if ($product['photo_diamond']): ?>
-            <img src="../uploads/black_diamond/photo/<?= htmlspecialchars($product['photo_diamond']) ?>" alt="Diamond Photo" width="100">
-        <?php endif; ?>
-    </div>
-
-    <div>
-        <label for="video_diamond">Diamond Video:</label>
-        <input type="file" id="video_diamond" name="video_diamond">
-        <p>Current Diamond Video:</p>
-        <?php if ($product['video_diamond']): ?>
-            <video src="../uploads/black_diamond/video/<?= htmlspecialchars($product['video_diamond']) ?>" width="200" controls></video>
-        <?php endif; ?>
-    </div>
-
-    <button type="submit" name="submit">Update</button>
-</form>
 
 <?php include '../includes/footer.php'; ?>
 

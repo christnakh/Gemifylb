@@ -73,42 +73,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     <meta name="apple-mobile-web-app-capable" content="yes">
   <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 <?php include '../includes/header.php';?>
-<h1>Edit Gadget</h1>
+<div class="container mt-4 p-3">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <h2 class="h3 font-weight-normal">Edit Gadget</h2>
+                    </div>
+                    <form action="edit_gadgets.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
 
-<form action="edit_gadgets.php" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
+                        <div class="form-group mb-3">
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" value="<?= htmlspecialchars($product['title']) ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
 
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value="<?= htmlspecialchars($product['title']) ?>">
+                        <div class="form-group mb-3">
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" required class="form-control rounded-pill border-0 px-4"><?= htmlspecialchars($product['description']) ?></textarea>
+                        </div>
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description"><?= htmlspecialchars($product['description']) ?></textarea>
+                        <div class="form-group mb-3">
+                            <label for="price">Price:</label>
+                            <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['price']) ?>" required class="form-control rounded-pill border-0 px-4">
+                        </div>
 
-    <label for="price">Price:</label>
-    <input type="text" id="price" name="price" value="<?= htmlspecialchars($product['price']) ?>">
+                        <div class="form-group mb-3">
+                            <label for="photo_gadget">Gadget Photo:</label>
+                            <div class="custom-file">
+                                <input type="file" id="photo_gadget" name="photo_gadget" class="custom-file-input">
+                                <label class="custom-file-label form-control rounded-pill border-0 px-4" for="photo_gadget">Choose file</label>
+                            </div>
+                            <p class="mt-2">Current Gadget Photo:</p>
+                            <?php if ($product['photo_gadget']): ?>
+                                <img src="../uploads/gadgets/photo/<?= htmlspecialchars($product['photo_gadget']) ?>" alt="Gadget Photo" width="100">
+                            <?php endif; ?>
+                        </div>
 
-    <label for="photo_gadget">Gadget Photo:</label>
-    <input type="file" id="photo_gadget" name="photo_gadget">
-    <p>Current Gadget Photo:</p>
-    <?php if ($product['photo_gadget']): ?>
-        <img src="../uploads/gadgets/photo/<?= htmlspecialchars($product['photo_gadget']) ?>" alt="Gadget Photo" width="100">
-    <?php endif; ?>
+                        <div class="form-group mb-3">
+                            <label for="video_gadget">Gadget Video:</label>
+                            <div class="custom-file">
+                                <input type="file" id="video_gadget" name="video_gadget" class="custom-file-input">
+                                <label class="custom-file-label form-control rounded-pill border-0 px-4" for="video_gadget">Choose file</label>
+                            </div>
+                            <p class="mt-2">Current Gadget Video:</p>
+                            <?php if ($product['video_gadget']): ?>
+                                <video width="320" height="240" controls>
+                                    <source src="../uploads/gadgets/video/<?= htmlspecialchars($product['video_gadget']) ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            <?php endif; ?>
+                        </div>
 
-    <label for="video_gadget">Gadget Video:</label>
-    <input type="file" id="video_gadget" name="video_gadget">
-    <p>Current Gadget Video:</p>
-    <?php if ($product['video_gadget']): ?>
-        <video width="320" height="240" controls>
-            <source src="../uploads/gadgets/video/<?= htmlspecialchars($product['video_gadget']) ?>" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    <?php endif; ?>
+                        <div class="text-center">
+                            <button type="submit" name="submit" class="btn btn-submit rounded-pill px-4">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <button type="submit" name="submit">Update</button>
-</form>
 
     <?php include '../includes/footer.php'; ?>
 </body>
