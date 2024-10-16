@@ -67,14 +67,14 @@ $isLoggedIn = isset($_SESSION['user_id']);
                                 <li><a class="dropdown-item" href="pages/post_watches.php">Watches</a></li>
                                 <li><a class="dropdown-item" href="pages/post_gadgets.php">Gadgets</a></li>
                             </ul>
-                        </li>
-                              <li class="nav-item dropdown">
+                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button">
-                                Rapaport
+                                Rapaport/ Gold
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="../uploads/rapaport/pear.pdf">Pear</a></li>
                                 <li><a class="dropdown-item" href="../uploads/rapaport/round.pdf">Round</a></li>
+                                 <li><a class="dropdown-item" href="#" id="gold-price-link">Gold</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -450,6 +450,29 @@ setInterval(changeImage, 5000); // 5000 milliseconds = 5 seconds
             });
         });
     </script>
+
+    <script>
+    document.getElementById('gold-price-link').addEventListener('click', function (e) {
+      e.preventDefault();  // Prevent default link behavior
+
+      // Fetch gold price from goldapi.io (replace YOUR-API-KEY with actual key)
+      fetch('https://www.goldapi.io/api/XAU/USD', {
+        headers: {
+          'x-access-token': 'goldapi-3qag3sm2bn7lav-io',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const goldPrice = data.price;
+        alert(`The current gold price is $${goldPrice} per ounce.`);
+      })
+      .catch(error => {
+        console.error('Error fetching gold price:', error);
+        alert('Failed to retrieve gold price.');
+      });
+    });
+  </script>
 
     <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
