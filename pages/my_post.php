@@ -9,8 +9,22 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Check if user is approved
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT is_approved FROM users WHERE id = ?");
+$stmt->bindParam(1, $user_id);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user['is_approved'] != 1) {
+    // User is not approved, show a message and wait for OK before redirecting
+    echo "<script>
+            alert('You are not authorized to post. Please wait for admin approval.');
+            window.location.href = '../index.php'; // Redirect after OK is clicked
+          </script>";
+    exit();
+}
+
 
 $user_id = $_SESSION['user_id'];
 
