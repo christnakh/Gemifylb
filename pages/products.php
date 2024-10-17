@@ -320,7 +320,7 @@ button.btn-submit:hover {
     <section id="boosted-products">
     <div class="section-header">
         <h2 class="boostedTitle">Boosted Products</h2>
-        <div class="BoostedContainer"><a href="products_boosted.php" class="view-all-btn btn btn-primary">View All Boosted Products</a></div> <br><br>
+        <div class="BoostedContainer"><a href="products_boosted.php" class="view-all-btn btn btn-primary">View All</a></div> <br><br>
     </div>
     <?php if (!empty($boostedProducts)): ?>
         <div class="products">
