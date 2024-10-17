@@ -17,6 +17,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/global.css">
   <!-- other meta tags and elements -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,7 +31,47 @@ $isLoggedIn = isset($_SESSION['user_id']);
   <!-- Meta KeyWoards -->
   <meta name="keywords" content="jewelry marketplace, buy jewelry, sell jewelry, watches, gadgets, diamonds, gemstones, fine jewelry, luxury items, handmade jewelry, jewelry auction, GemifyLB, custom jewelry, vintage jewelry, fashion jewelry, engagement rings, wedding bands, bracelets, necklaces, earrings, gemstones for sale, jewelry designers, jewelry appraisals, jewelry repair, precious metals, jewelry collectors, online jewelry shop, jewelry sales, jewelry trends, luxury watches, accessories, personal accessories, stylish gadgets, artisan jewelry, unique gifts, estate jewelry">
 
-  
+  <style>
+    .feedback .carousel-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-items {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.item {
+    min-width: 100%; /* Each item takes full width of the container */
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.carousel-nav-buttons {
+    display: none; /* Hidden by default, shown only in mobile view */
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    text-align: center;
+}
+
+.carousel-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .carousel-nav-buttons {
+        display: block;
+    }
+}
+
+  </style>
 
 </head>
 
@@ -116,7 +157,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
         <div class="text-center position-absolute text-white py-4">
           <h1 class="display-5 fw-bold text-shadow">JEWELLERY FOR THE FEMININE IN YOU</h1>
           <p class="lead text-shadow display-6">Take a moment and cherish the grand collection</p>
-          <button class="btn btn-outline-light text-uppercase w-auto rounded-0 p-3">Make Order</button>
+          <button class="btn btn-outline-light text-uppercase w-auto rounded-0 p-3">View Products</button>
         </div>
       </div>
     </section>
@@ -125,28 +166,13 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <div class="blogs bg-light py-5">
       <div class="container">
         <h2 class="text-center mb-5">Our blogs</h2>
-        <div class="row gx-4 gy-4">
-          <div class="col-md-5">
-            <div class="blog-image position-relative">
-              <img src="images/image.png" alt="Image" class="img-fluid" />
-              <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark text-white opacity-75 transition">
-                <div class="overlay-content text-center">
-                  <img src="images/up.png" alt="Overlay Image" class="img-fluid mb-3" style="z-index: 1;" />
-                  <h1 class="mb-4">Gemify</h1>
-                  <h3 class="mb-4">Antique Jewellery</h3>
-                  <button class="btn btn-outline-light mb-4" style="z-index: 1;">View Collections</button>
-                  <img src="images/up.png" alt="Overlay Image" class="img-fluid mt-4 rotate-image" style="z-index: 1;" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-7">
+
             <div class="row">
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-4">
                 <div class="blog-item position-relative overflow-hidden">
                   <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
                   <div class="blog-details p-2">
-                    <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p>
+                    <!-- <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
                     <p class="text-start">Share your love with couple rings</p>
                     <p class="text-start">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -157,11 +183,11 @@ $isLoggedIn = isset($_SESSION['user_id']);
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                 <div class="blog-item position-relative overflow-hidden">
                   <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
                   <div class="blog-details p-2">
-                    <p class="text-start"> <i class="fas fa-solid fa-user"></i> Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p>
+                    <!-- <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
                     <p class="text-start">Share your love with couple rings</p>
                     <p class="text-start">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -172,11 +198,41 @@ $isLoggedIn = isset($_SESSION['user_id']);
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-md-6">
+                           <div class="col-12 col-md-4">
                 <div class="blog-item position-relative overflow-hidden">
                   <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
                   <div class="blog-details p-2">
-                    <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p>
+                    <!-- <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
+                    <p class="text-start">Share your love with couple rings</p>
+                    <p class="text-start">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Sint, dolore. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Sint, dolore
+                    </p>
+                    <a href="#" class="btn rounded-0 mb-3">Read More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="blog-item position-relative overflow-hidden">
+                  <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
+                  <div class="blog-details p-2">
+                    <!-- <p class="text-start"> <i class="fas fa-solid fa-user"></i> Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
+                    <p class="text-start">Share your love with couple rings</p>
+                    <p class="text-start">
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Sint, dolore. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Sint, dolore
+                    </p>
+                    <a href="#" class="btn rounded-0 mb-3">Read More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <div class="blog-item position-relative overflow-hidden">
+                  <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
+                  <div class="blog-details p-2">
+                    <!-- <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
                     <p class="text-start">Share your love with couple rings</p>
                     <p class="text-start">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -187,11 +243,11 @@ $isLoggedIn = isset($_SESSION['user_id']);
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-4">
                 <div class="blog-item position-relative overflow-hidden">
                   <img src="images/image2.png" alt="Blog Image" class="w-100 h-100 mb-2" />
                   <div class="blog-details p-2">
-                    <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p>
+                    <!-- <p class="text-start"><i class="fas fa-solid fa-user"></i>Ramamoorthi M <span>|</span> <i class="fas fa-solid fa-calendar"></i>July 18, 2020</p> -->
                     <p class="text-start">Share your love with couple rings</p>
                     <p class="text-start">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -205,10 +261,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="members">
+    <!-- <div class="members">
       <h2 class="special-heading">Why our members love Gemify</h2>
       <div class="members-content">
         <div class="item bg-white rounded-1">
@@ -260,7 +314,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="feedback">
       <h2 class="special-heading">Why our members love Gemify</h2>
@@ -318,12 +372,13 @@ $isLoggedIn = isset($_SESSION['user_id']);
               <h5>7th of July 2024</h5>
             </div>
           </div>
-
-
-         
           </div>
+
+          
           <br>
           <br>
+
+
         <!-- </div>
         <button class="carousel-btn next-btn">&#10095;</button>
       </div> -->
@@ -478,6 +533,29 @@ setInterval(changeImage, 5000); // 5000 milliseconds = 5 seconds
       });
     });
   </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const items = document.querySelector('.carousel-items');
+    let currentIndex = 0;
+
+    document.querySelector('.prev-btn').addEventListener('click', function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            items.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+    });
+
+    document.querySelector('.next-btn').addEventListener('click', function() {
+        if (currentIndex < items.children.length - 1) {
+            currentIndex++;
+            items.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+    });
+});
+
+</script>
 
     <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

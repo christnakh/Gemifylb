@@ -49,82 +49,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!is_dir($front_id_photo_dir)) mkdir($front_id_photo_dir, 0755, true);
     if (!is_dir($back_id_photo_dir)) mkdir($back_id_photo_dir, 0755, true);
 
-
-    // Define the extensions you don't want to allow
-$disallowed_extensions = ['exe', 'bat', 'sh', 'php', 'js', 'html'];
-
 // Validate and process profile picture upload
 if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-    $profile_picture_extension = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
-    
-    // Check if the file extension is in the disallowed list
-    if (!in_array($profile_picture_extension, $disallowed_extensions)) {
-        $profile_picture_filename = uniqid() . '-' . basename($_FILES['profile_picture']['name']);
-        $profile_picture_filepath = $profile_picture_dir . $profile_picture_filename;
-        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture_filepath);
-    } else {
-        $error = "Invalid file type for profile picture.";
-    }
+    $profile_picture_filename = uniqid() . '-' . basename($_FILES['profile_picture']['name']);
+    $profile_picture_filepath = $profile_picture_dir . $profile_picture_filename;
+    move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture_filepath);
 } else {
     $profile_picture_filename = null;
 }
 
-    // Validate and process personal ID photo upload
-    if (isset($_FILES['passport_photo']) && $_FILES['passport_photo']['error'] == 0) {
-        $passport_photo_extension = pathinfo($_FILES['passport_photo']['name'], PATHINFO_EXTENSION);
-        if (in_array($passport_photo_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $passport_photo_filename = uniqid() . '-' . basename($_FILES['passport_photo']['name']);
-            $passport_photo_filepath = $passport_photo_dir . $passport_photo_filename;
-            move_uploaded_file($_FILES['passport_photo']['tmp_name'], $passport_photo_filepath);
-        } else {
-            $error = "Invalid file type for personal ID photo.";
-        }
-    } else {
-        $passport_photo_filename = null;
-    }
+// Validate and process personal ID photo upload
+if (isset($_FILES['passport_photo']) && $_FILES['passport_photo']['error'] == 0) {
+    $passport_photo_filename = uniqid() . '-' . basename($_FILES['passport_photo']['name']);
+    $passport_photo_filepath = $passport_photo_dir . $passport_photo_filename;
+    move_uploaded_file($_FILES['passport_photo']['tmp_name'], $passport_photo_filepath);
+} else {
+    $passport_photo_filename = null;
+}
 
-    // Validate and process business certificate upload if role is 'business'
-    if ($role == 'business' && isset($_FILES['business_document']) && $_FILES['business_document']['error'] == 0) {
-        $business_document_extension = pathinfo($_FILES['business_document']['name'], PATHINFO_EXTENSION);
-        if (in_array($business_document_extension, ['jpg', 'jpeg', 'png', 'gif', 'pdf'])) {
-            $business_document_filename = uniqid() . '-' . basename($_FILES['business_document']['name']);
-            $business_document_filepath = $business_certificate_dir . $business_document_filename;
-            move_uploaded_file($_FILES['business_document']['tmp_name'], $business_document_filepath);
-        } else {
-            $error = "Invalid file type for business document.";
-        }
-    } else {
-        $business_document_filename = null;
-    }
+// Validate and process business certificate upload if role is 'business'
+if ($role == 'business' && isset($_FILES['business_document']) && $_FILES['business_document']['error'] == 0) {
+    $business_document_filename = uniqid() . '-' . basename($_FILES['business_document']['name']);
+    $business_document_filepath = $business_certificate_dir . $business_document_filename;
+    move_uploaded_file($_FILES['business_document']['tmp_name'], $business_document_filepath);
+} else {
+    $business_document_filename = null;
+}
 
-    // Validate and process front ID photo upload
-    if (isset($_FILES['front_id_photo']) && $_FILES['front_id_photo']['error'] == 0) {
-        $front_id_photo_extension = pathinfo($_FILES['front_id_photo']['name'], PATHINFO_EXTENSION);
-        if (in_array($front_id_photo_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $front_id_photo_filename = uniqid() . '-' . basename($_FILES['front_id_photo']['name']);
-            $front_id_photo_filepath = $front_id_photo_dir . $front_id_photo_filename;
-            move_uploaded_file($_FILES['front_id_photo']['tmp_name'], $front_id_photo_filepath);
-        } else {
-            $error = "Invalid file type for front ID photo.";
-        }
-    } else {
-        $front_id_photo_filename = null;
-    }
+// Validate and process front ID photo upload
+if (isset($_FILES['front_id_photo']) && $_FILES['front_id_photo']['error'] == 0) {
+    $front_id_photo_filename = uniqid() . '-' . basename($_FILES['front_id_photo']['name']);
+    $front_id_photo_filepath = $front_id_photo_dir . $front_id_photo_filename;
+    move_uploaded_file($_FILES['front_id_photo']['tmp_name'], $front_id_photo_filepath);
+} else {
+    $front_id_photo_filename = null;
+}
 
-    // Validate and process back ID photo upload
-    if (isset($_FILES['back_id_photo']) && $_FILES['back_id_photo']['error'] == 0) {
-        $back_id_photo_extension = pathinfo($_FILES['back_id_photo']['name'], PATHINFO_EXTENSION);
-        if (in_array($back_id_photo_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $back_id_photo_filename = uniqid() . '-' . basename($_FILES['back_id_photo']['name']);
-            $back_id_photo_filepath = $back_id_photo_dir . $back_id_photo_filename;
-            move_uploaded_file($_FILES['back_id_photo']['tmp_name'], $back_id_photo_filepath);
-        } else {
-            $error = "Invalid file type for back ID photo.";
-        }
-    } else {
-        $back_id_photo_filename = null;
-    }
-
+// Validate and process back ID photo upload
+if (isset($_FILES['back_id_photo']) && $_FILES['back_id_photo']['error'] == 0) {
+    $back_id_photo_filename = uniqid() . '-' . basename($_FILES['back_id_photo']['name']);
+    $back_id_photo_filepath = $back_id_photo_dir . $back_id_photo_filename;
+    move_uploaded_file($_FILES['back_id_photo']['tmp_name'], $back_id_photo_filepath);
+} else {
+    $back_id_photo_filename = null;
+}
     // If no error, insert data into database
     if (empty($error)) {
         try {

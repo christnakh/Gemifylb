@@ -151,7 +151,7 @@ foreach ($product_queries as $category => $query) {
 <body>
 <?php include '../includes/header.php'; ?>
 <div class="container">
-    <h1 class="text-center mb-4">My Products</h1>
+    <h1 class="text-center mb-4">My Post</h1>
 
     <?php foreach ($products as $category => $items): ?>
         <div class="product-container">
