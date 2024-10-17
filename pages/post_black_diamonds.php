@@ -155,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="name">Name:</label>
+                                <label for="name">Nature:</label>
                                 <input type="text" id="name" name="name" class="form-control rounded-pill border-0 px-4" required>
                             </div>
 

@@ -211,6 +211,7 @@ function toggleOtherShapeInput(value) {
                                 <select id="nature" name="nature" required class="form-control rounded-pill border-0 px-4 custom-select">
                                     <option value="Natural">Natural</option>
                                     <option value="CVD / Lab-grown">CVD / Lab-grown</option>
+                                     <option value="Raw">Raw</option>
                                 </select><br>
                             </div>
 
@@ -352,7 +353,7 @@ function toggleOtherShapeInput(value) {
                             </div>
 
                             <div class="form-group mb-3">
-                                <label for="discount_type">Discount:</label>
+                                <label for="discount_type">Discount (%):</label>
                                 <input type="text" id="discount_type" name="discount_type" class="form-control rounded-pill border-0 px-4">
                             </div>
 
