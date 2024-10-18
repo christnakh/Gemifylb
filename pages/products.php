@@ -327,7 +327,7 @@ button.btn-submit:hover {
             <?php foreach ($boostedProducts as $product): ?>
                 <div class="product">
                     <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-                    <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
+                    <h6 class="text-center product_type"><?= htmlspecialchars(ucfirst($product['type'])) ?></h6>
                     <div class="image-slider">
                         <div class="slider-container">
                             <?php
@@ -436,7 +436,7 @@ button.btn-submit:hover {
     <?php foreach ($products as $product) : ?>
         <div class="product">
             <h2 class="text-center"><?= htmlspecialchars($product['name']) ?></h2>
-            <h6 class="text-center product_type"><?= htmlspecialchars($product['type']) ?></h6>
+            <h6 class="text-center product_type"><?= htmlspecialchars(ucfirst($product['type'])) ?></h6>
             <div class="image-slider">
                 <div class="slider-container">
                     <?php
@@ -476,7 +476,7 @@ button.btn-submit:hover {
                 <?php endif; ?>
 
                 <?php if (!empty($product['shape'])) : ?>
-                    <p><i class="fas fa-shapes"></i><strong></strong> <?= htmlspecialchars($product['shape']) ?></p>
+                    <p><i class="fas fa-shapes"></i> <?= htmlspecialchars($product['shape']) ?></p>
                 <?php endif; ?>
 
                 <?php if (!empty($product['color'])) : ?>

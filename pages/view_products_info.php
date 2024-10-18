@@ -201,8 +201,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
     <meta charset="UTF-8">
     <title>Product Details</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/product_details.css">
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
@@ -509,7 +510,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Weight -->
                                     <?php if (!empty($productDetails['weight'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">fitness_center</i>
+                                            <i class="fas fa-weight-hanging"></i>
                                             <span> <b>Weight</b> <?php echo htmlspecialchars($productDetails['weight']); ?> ct</span>
                                         </div>
                                     <?php endif; ?>
@@ -517,7 +518,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Shape -->
                                     <?php if (!empty($productDetails['shape'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">panorama_fish_eye</i>
+                                            <i class="fas fa-shapes"></i>
                                             <span> <b>Shape</b> <?php echo htmlspecialchars($productDetails['shape']); ?></span>
                                         </div>
                                     <?php endif; ?>
@@ -525,7 +526,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Color -->
                                     <?php if (!empty($productDetails['color'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">color_lens</i>
+                                            <i class="fas fa-paint-brush"></i>
                                             <span> <b>Color</b> <?php echo htmlspecialchars($productDetails['color']); ?></span>
                                         </div>
                                     <?php endif; ?>
