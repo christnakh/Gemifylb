@@ -289,7 +289,7 @@ function toggleOtherShapeInput(value) {
 
                             <div class="form-group mb-3">
                                 <label for="weight">Weight (in carats):</label>
-                                <input type="number" id="weight" name="weight" step="0.01" class="form-control rounded-pill border-0 px-4" required>
+                                <input type="number" id="weight" name="weight" min="0" step="1" inputmode="numeric" class="form-control rounded-pill border-0 px-4" required>
                             </div>
 
                             <div class="form-group mb-3">
