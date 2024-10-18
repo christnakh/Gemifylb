@@ -211,12 +211,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             <div class="form-group mb-3">
                                 <label for="weight">Weight (in carats):</label>
-                                <input type="number" id="weight" name="weight" step="0.01" class="form-control rounded-pill border-0 px-4" required>
+                                <input type="number" id="weight" name="weight" min="0" step="1" inputmode="numeric" class="form-control rounded-pill border-0 px-4" required>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="price_per_ct">Price per Carat:</label>
-                                <input type="number" id="price_per_ct" name="price_per_ct" step="0.01" class="form-control rounded-pill border-0 px-4" required>
+                                <input type="number" id="price_per_ct" name="price_per_ct" min="0" step="1" inputmode="numeric" class="form-control rounded-pill border-0 px-4" required>
                             </div>
 
                                 <div class="text-center">

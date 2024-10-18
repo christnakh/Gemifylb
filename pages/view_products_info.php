@@ -204,6 +204,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="https://fonts.googleapis.com/css2?family=Morina:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/product_details.css">
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
@@ -298,6 +300,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
         .info-item span {
             font-size: 16px;
             font-weight: 500;
+        }
+
+        .info-item > i{
+            color: black !important;
         }
 
         /* Back Button Styling */
@@ -542,7 +548,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Cut -->
                                     <?php if (!empty($productDetails['cut'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">diamond</i>
+                                            <i class="fas fa-cut"></i>
                                             <span> <b>Cut</b> <?php echo htmlspecialchars($productDetails['cut']); ?></span>
                                         </div>
                                     <?php endif; ?>
@@ -566,7 +572,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Brand -->
                                     <?php if (!empty($productDetails['brand'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">business</i>
+                                            <i class="fas fa-gem"></i>
                                             <span> <b>Brand</b> <?php echo htmlspecialchars($productDetails['brand']); ?></span>
                                         </div>
                                     <?php endif; ?>
@@ -574,7 +580,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Price -->
                                     <?php if (!empty($productDetails['price'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">attach_money</i>
+                                            <i class="fas fa-dollar-sign"></i>
                                             <span> <b>Price</b> <?php echo htmlspecialchars($productDetails['price']); ?> </span>
                                         </div>
                                     <?php endif; ?>
@@ -582,7 +588,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['type']) && isset($_POS
                                     <!-- Product Type -->
                                     <?php if (!empty($productDetails['type_p'])): ?>
                                         <div class="col-lg-4 col-md-6 col-sm-12 info-item text-center">
-                                            <i class="material-icons">label</i>
+                                            <i class="fas fa-ring"></i>
                                             <span> <b>Type</b> <?php echo htmlspecialchars($productDetails['type_p']); ?></span>
                                         </div>
                                     <?php endif; ?>

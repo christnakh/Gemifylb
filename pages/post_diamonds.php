@@ -354,7 +354,7 @@ function toggleOtherShapeInput(value) {
 
                             <div class="form-group mb-3">
                                 <label for="discount_type">Discount (%):</label>
-                                <input type="text" id="discount_type" name="discount_type" class="form-control rounded-pill border-0 px-4">
+                                <input type="number" min="0" step="1" inputmode="numeric" id="discount_type" name="discount_type" class="form-control rounded-pill border-0 px-4">
                             </div>
 
                             <div class="text-center">

@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="form-group">
                             <label for="weight">Weight (carats):</label>
-                            <input type="number" step="0.01" id="weight" name="weight" class="form-control rounded-pill border-0 px-4" required><br>
+                            <input type="number" min="0" step="1" inputmode="numeric" id="weight" name="weight" class="form-control rounded-pill border-0 px-4" required><br>
                         </div>
 
                         <div class="form-group">

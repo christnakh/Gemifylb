@@ -422,16 +422,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
             </ul>
           </div>
           <div class="col-md-3 col-sm-6">
-            <h5 class="mt-3">Information</h5>
-            <ul>
-              <li>Advanced Search</li>
-              <li>Search Terms</li>
-              <li>Help & FAQ's</li>
-              <li>Store Location</li>
-              <li>Order & Return</li>
-            </ul>
-          </div>
-          <div class="col-md-3 col-sm-6">
             <h5 class="mt-3">Support</h5>
             <ul>
               <li>e-Mail Support</li>
